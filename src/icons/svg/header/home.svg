@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="38" viewBox="0 0 34 38">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #383838;
+        stroke-width: 3px;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="矩形_736_拷贝_3" data-name="矩形 736 拷贝 3" class="cls-1" d="M1205,1630v-23l-15.02-12L1174,1607v23h12v-13c0-1.1.89-1,2-1h3c1.1,0,2-.1,2,1v13h12Z" transform="translate(-1172.5 -1593.5)"/>
+</svg>

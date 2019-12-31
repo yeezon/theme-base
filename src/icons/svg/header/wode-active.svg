@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="39" viewBox="0 0 34 39">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #383838;
+        stroke: #383838;
+        stroke-width: 3px;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="形状_739_拷贝_2" data-name="形状 739 拷贝 2" class="cls-1" d="M2572.5,1595a7.5,7.5,0,1,1-7.5,7.5A7.5,7.5,0,0,1,2572.5,1595Zm13.15,36.01h-26.31a3.886,3.886,0,0,1-2.34-2.16v-2.97c0-7.67,6.94-13.89,15.5-13.89h0c8.56,0,15.5,6.22,15.5,13.89v2.97A3.877,3.877,0,0,1,2585.65,1631.01Z" transform="translate(-2555.5 -1593.5)"/>
+</svg>

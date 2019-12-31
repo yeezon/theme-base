@@ -1,0 +1,29 @@
+
+/* 0 的时候用 0px，不然 calc 计算时不会自动转换类型，导致计算出错 */
+
+:root {
+  --statusBar: 0px;
+  --homeIndicator: 0px;
+  --navBar: 44px;
+  --tabBar: 49px;
+
+  --color: #333;
+  --borderColor: #d5d5d5;
+  --backgroundColor: #f4f4f4;
+  --1px: 1px; /* JS Set .5px */
+  --100vh: 100vh;
+}
+
+@supports (bottom: constant(safe-area-inset-bottom)) {
+  :root {
+    --statusBar: constant(safe-area-inset-top);
+    --homeIndicator: constant(safe-area-inset-bottom);
+  }
+}
+
+@supports (bottom: env(safe-area-inset-bottom)) {
+  :root {
+    --statusBar: env(safe-area-inset-top);
+    --homeIndicator: env(safe-area-inset-bottom);
+  }
+}

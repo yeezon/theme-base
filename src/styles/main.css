@@ -1,0 +1,12 @@
+
+/* 全局样式 */
+
+/* 重置旧基础页面样式 */
+.wrapper.i-base {
+  z-index: auto;
+}
+@media screen and (max-width: 768px) {
+  .wrapper.i-base .mod {
+    padding: 0;
+  }
+}
