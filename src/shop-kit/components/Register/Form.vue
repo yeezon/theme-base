@@ -175,8 +175,8 @@ export default {
       const isUsername = this.$sdk.util.isUsername(value)
 
       switch (true) {
-        case value.length < 5:
-          errTips = '账号长度过短！'
+        case value.length < 4:
+          errTips = '用户名需包含4-30个字符，包括数字，大小写字母，以及符号'
           break
         case this.allowEmail && !this.allowMobile && !this.allowUserName && !isEmail:
           errTips = '请输入正确的邮箱账号！'
