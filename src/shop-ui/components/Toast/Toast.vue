@@ -76,6 +76,8 @@ export default {
 .su-toast {
   z-index: 999;
   display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -89,8 +91,8 @@ export default {
   pointer-events: auto;
 }
 .s-box {
-  margin: auto;
   padding: 6px 16px;
+  border: none;
   border-radius: 3px;
   background-color: rgba(0, 0, 0, .8);
   color: #fff;

@@ -85,6 +85,8 @@ export default {
   .su-confirm {
     z-index: 998;
     display: flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -101,10 +103,9 @@ export default {
     background: rgba(0, 0, 0, 0);
   }
   .s-box {
-    margin: auto;
     padding: 20px;
     width: min-content;
-    border: 0 solid transform;
+    border: none;
     border-radius: 5px;
     background-color: #fff;
     transform: translateY(-30%);

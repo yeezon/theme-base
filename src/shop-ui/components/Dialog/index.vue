@@ -79,7 +79,6 @@ export default {
   }
   .s-inner {
     box-sizing: border-box;
-    /* margin: auto; */
     padding: 25px 30px;
     width: min-content;
     max-width: calc(100% - 15px);
