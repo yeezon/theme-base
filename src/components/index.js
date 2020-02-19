@@ -16,6 +16,7 @@ import Comment from './Comment'
 import TopicFavor from './TopicFavor'
 import TopicAvatar from './TopicAvatar'
 import MobShare from './MobShare'
+import PostItem from './PostItem'
 
 const componentDefs = [
   Component,
@@ -34,7 +35,8 @@ const componentDefs = [
   Comment,
   TopicFavor,
   TopicAvatar,
-  MobShare
+  MobShare,
+  PostItem
 ]
 
 const install = function (Vue, options) {
@@ -63,5 +65,6 @@ export default {
   Comment,
   TopicFavor,
   TopicAvatar,
-  MobShare
+  MobShare,
+  PostItem
 }

@@ -1,6 +1,7 @@
 
 // Ponyfills
 import 'whatwg-fetch'
+import '@/vendors/currentScript'
 import cssVars from 'css-vars-ponyfill'
 
 import Vue from 'vue'
@@ -121,5 +122,5 @@ window.ThemeBase.init()
 // 异步加载模块
 // TencentCaptcha
 if (!env.isMiniProgram) { // iframe 业务域名问题
-  import('@/vendors/TCaptcha')
+  import('@/vendors/TCaptcha').catch(() => {}) // 后续可以上报错误
 }

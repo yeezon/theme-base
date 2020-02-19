@@ -44,7 +44,7 @@ export default {
     }
   },
   created () {
-    this.scrollPage()
+    // this.scrollPage()
   },
   computed: {
     pagers: {
@@ -219,16 +219,20 @@ export default {
   background: transparent;
 }
 .number:hover{
-  border: 1px solid var(--main_color);
-  color: var(--main_color);
+  /* border: 1px solid var(--main_color); */
+  /* color: var(--main_color); */
+  border: 1px solid #0f57db;
+  color: #0f57db;
 }
 .number.active{
-  border: 1px solid var(--main_color);
-  color: var(--main_color);
+  /* border: 1px solid var(--main_color); */
+  /* color: var(--main_color); */
+  border: 1px solid #0f57db;
+  color: #0f57db;
 }
 @media screen and (max-width:768px) {
   .pagination{
-    display: none;
+    /* display: none; */
   }
 }
 </style>

@@ -2,10 +2,10 @@
   <div class="votes">
     <div class="votes-inner">
       <div class="votes-breadcrumbs">
-        <tu-breadcrumbs first-link="/votes" first="所有话题/投票"></tu-breadcrumbs>
+        <tu-breadcrumbs first-link="/votes" first="所有投票"></tu-breadcrumbs>
       </div>
-      <tu-mob-back title="所有话题/投票"></tu-mob-back>
-      <tu-loading v-if="voteLoading && firstLoading" :isLoading="voteLoading" text="加载中..."></tu-loading>
+      <tu-mob-back title="所有投票"></tu-mob-back>
+      <tu-loading v-if="voteLoading" :isLoading="voteLoading" text="加载中..."></tu-loading>
       <template v-else>
         <ul class="votes-con" v-if="votes.length">
           <li class="vote-item" v-for="(item, index) in votes" :key="index">
@@ -17,20 +17,19 @@
             </template>
             <template v-if="item.type === 1">
               <tu-vote-select :vote="item" :title="true" @radio="fnRadio"></tu-vote-select>
-              <tu-vote-comment v-if="item.comments.length" :comments="item.comments"></tu-vote-comment>
+              <tu-vote-comment v-if="item.comments.length && isShowComment" :comments="item.comments"></tu-vote-comment>
             </template>
             <template v-if="item.type === 2">
               <tu-vote-pk :vote="item" :title="true" @pk="fnPk"></tu-vote-pk>
-              <tu-vote-comment v-if="item.comments.length" :comments="item.comments"></tu-vote-comment>
+              <tu-vote-comment v-if="item.comments.length && isShowComment" :comments="item.comments"></tu-vote-comment>
             </template>
           </li>
         </ul>
         <div v-else class="empty">
           暂无投票
         </div>
-        <tu-paginate-lite v-if="votes.length" :total="total" :page="config.page" @change="handlePage" @change-scroll="handleScroll"></tu-paginate-lite>
+        <tu-paginate-lite v-if="votes.length" :total="total" :page="config.page" @change="handlePage"></tu-paginate-lite>
       </template>
-      <tu-mob-loading :isLoading="voteMobLoading"></tu-mob-loading>
     </div>
   </div>
 </template>
@@ -39,6 +38,11 @@
 import { judgesign } from '@/mixins'
 function getVotes ({ size, page }) {
   return window.fetch(`/api/v1/topic-votes?size=${size}&page=${page}`, {
+    credentials: 'include'
+  })
+}
+function getSetting () {
+  return window.fetch(`/api/v1/topic-votes/comments/setting`, {
     credentials: 'include'
   })
 }
@@ -52,8 +56,7 @@ export default {
       total: 1,
       paging: {},
       voteLoading: true,
-      firstLoading: true,
-      voteMobLoading: false,
+      isShowComment: false,
       votes: []
     }
   },
@@ -63,41 +66,33 @@ export default {
   },
   methods: {
     init () {
-      if (this.nWidth > 768) {
-        this.voteLoading = true
-      } else {
-        this.voteMobLoading = true
-      }
+      this.voteLoading = true
       getVotes(this.config).then(oRes => {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
           this.paging = res.msg.paging
           this.total = res.msg.paging.pages
-          if (this.nWidth > 768) {
-            this.voteLoading = false
-            this.votes = res.msg.results.items || []
-            this.votes.forEach(item => {
-              if (item.enabled_vote) {
-                item.sum = item.option_values.reduce((prev, next) => prev + next)
-              }
-            })
-          } else {
-            this.firstLoading = false
-            this.voteMobLoading = false
-            this.votes = this.votes.concat(res.msg.results.items || [])
-            this.votes.forEach(item => {
-              if (item.enabled_vote) {
-                item.sum = item.option_values.reduce((prev, next) => prev + next)
-              }
-            })
-          }
+          this.voteLoading = false
+          this.votes = res.msg.results.items || []
+          this.votes.forEach(item => {
+            if (item.enabled_vote) {
+              item.sum = item.option_values.reduce((prev, next) => prev + next)
+            }
+          })
+        }
+      })
+      getSetting().then(oRes => {
+        return oRes.json()
+      }).then(res => {
+        if (res.code === 200) {
+          let _data = res.msg.results
+          this.isShowComment = _data.enable_option
         }
       })
     },
     fnRadio (value, item) {
       this.fnJudgeSign()
-      console.log('item', item)
       let _index = ''
       item.options.forEach((item, index) => {
         if (item === value) {
@@ -166,9 +161,6 @@ export default {
       })
     },
     handlePage (index) {
-      this.config.page = index
-    },
-    handleScroll (index) {
       this.config.page = index
     }
   },

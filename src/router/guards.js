@@ -1,4 +1,6 @@
 
+import store from '@/store'
+
 export function beforeEach (to, from, next) {
   // 非当前路径才整页跳转，不然死循环
   // 后面再考虑 router.replace() 要对应 location.replace() 的情况
@@ -18,6 +20,9 @@ export function beforeEach (to, from, next) {
   } else {
     window.location.href = to.fullPath
   }
+
+  // 优化 window.$account 兼容性
+  store.dispatch('getAccountInfo').then(({ data }) => {}).catch(oError => {})
 }
 
 export default {

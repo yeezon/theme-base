@@ -28,6 +28,11 @@ function getMoreComment (id, lastId) {
     credentials: 'include'
   })
 }
+function getSetting () {
+  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+    credentials: 'include'
+  })
+}
 export default {
   data () {
     return {
@@ -36,7 +41,11 @@ export default {
       comment: '',
       comments: [],
       moreCommentBtn: false,
-      lastId: ''
+      lastId: '',
+      minLength: '',
+      isShowComment: true,
+      isReviewComment: true,
+      isOrder: ''
     }
   },
   created () {
@@ -56,6 +65,17 @@ export default {
           }
         }
       })
+      getSetting().then(oRes => {
+        return oRes.json()
+      }).then(res => {
+        if (res.code === 200) {
+          let _data = res.msg.results
+          this.minLength = _data.min_content_length
+          this.isShowComment = _data.enable_option
+          this.isReviewComment = _data.enable_review
+          this.isOrder = _data.sort_order
+        }
+      })
     },
     fnPublish (comment) {
       let _this = this
@@ -73,16 +93,27 @@ export default {
         return oRes.json()
       }).then(function (oData) {
         if ((oData || {}).code === 200) {
-          _this.comments.unshift({
+          let inputData = {
             customer: {
-              avatar_id: '//asset.ibanquan.com/image/5c50179b4194e52dd20011cf/s.png?v=1548752795',
+              avatar: {
+                src: _this.$store.state.account.oInfo.avatar_url
+              },
               name: _this.oCustomer.name
             },
             id: oData.msg.results.id,
             created_at: new Date(),
             like_count: 0,
             content: comment
-          })
+          }
+          if (!_this.isReviewComment) {
+            if (_this.isOrder) {
+              _this.comments.push(inputData)
+            } else {
+              _this.comments.unshift(inputData)
+            }
+            _this.gallery.comment_count++
+          }
+          _this.$toast.info('提交成功')
         } else {
           console.log('评论失败')
         }

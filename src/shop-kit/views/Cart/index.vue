@@ -478,7 +478,7 @@ export default {
           if (/^(200|212)$/.test(data.res.code)) {
             this.update()
           } else {
-            this.$toast.info('全不选失败')
+            this.$toast.info('修正失败，请稍后再访问')
           }
         })
       }

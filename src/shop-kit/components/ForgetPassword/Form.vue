@@ -38,7 +38,7 @@ export default {
   data () {
     var checkAccount = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('账号不能为空'))
+        callback(new Error('请输入手机号或邮箱'))
       } else {
         this.fnCheckAccountStater(value, callback)
       }
@@ -181,11 +181,10 @@ export default {
       let errTips = ''
       const isEmail = this.$sdk.util.isEmail(value)
       const isMobile = this.$sdk.util.isMobile(value)
+      // const isUsername = this.$sdk.util.isUsername(value)
+
       if (!isMobile && !isEmail) {
         switch (true) {
-          case value.length < 4:
-            errTips = '用户名需包含4-30个字符，包括数字，大小写字母，以及符号'
-            break
           case value.indexOf('@') > -1:
             errTips = '请输入正确的邮箱账号！'
             break

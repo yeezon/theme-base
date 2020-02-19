@@ -11,7 +11,7 @@
           <svg-icon name="common-favor-active" class="icon"></svg-icon>
           {{info.favor_count}}
         </span>
-        <router-link class="comment" :to="`gallery/${info.id}`">
+        <router-link class="comment" v-if="isShowComment" :to="`gallery/${info.id}`">
           <svg-icon name="common-comment-active" class="icon"></svg-icon>
           {{info.comment_count}}
         </router-link>
@@ -89,6 +89,10 @@ export default {
     info: {
       type: Object,
       default: () => {}
+    },
+    isShowComment: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

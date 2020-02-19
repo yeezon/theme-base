@@ -188,10 +188,11 @@ module.exports = {
   productionSourceMap: false,
 
   css: {
-    extract: !(process.env.NODE_ENV === 'production') ? false : {
-      filename: '[name].raw.css',
-      chunkFilename: '[id]-[chunkhash].raw.css'
-    }
+    extract: false
+    // extract: !(process.env.NODE_ENV === 'production') ? false : {
+    //   filename: '[name].raw.css',
+    //   chunkFilename: '[id]-[chunkhash].raw.css'
+    // }
   },
 
   pluginOptions: {

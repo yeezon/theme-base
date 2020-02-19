@@ -4,7 +4,7 @@
 
 <template>
 <div class="sk-form-view" data-com="SkFormView">
-  <div ref="form">
+  <div class="sk-form-box i-loading" ref="form">
     <div class="sk-form-cont">
       <div class="sk-form-cntr"></div>
     </div>
@@ -13,6 +13,9 @@
 </template>
 
 <script>
+import closeImg from '@/shop-kit/views/Form/assets/close.png'
+import successImg from '@/shop-kit/views/Form/assets/success.gif' // '//asset.ibanquan.com/image/5dba55d1718a10002e188622/s.gif'
+
 export default {
   name: 'SkFormView',
   data () {
@@ -57,6 +60,10 @@ export default {
         return _class
       }
 
+      var fnCheckURL = (url) => {
+        return /^(https?:)?\/\/([\w-]+\.)+[\w-]+(\/[\w-+_;./?%&=#:,{}()]*)?$/ig.test(url)
+      }
+
       const $el = this.$refs.form
       const sID = this.handle || ''
       const oFormConfigData = this.oForm || {}
@@ -80,10 +87,10 @@ export default {
           var _htmlName = '<h1 class="' + fnCM('sk-form-name') + '">' + _name + '</h1>'
           var _htmlDesc = '<div class="' + fnCM('sk-form-desc') + '">' + _desc + '</div>'
 
-          _html = '<div class="' + fnCM('sk-form-form') + '">'
+          _html = '<div class="' + fnCM('sk-form-form_box') + '">'
 
           if (_name) _html += _htmlName
-          if (_htmlDesc) _html += _htmlDesc
+          if (_desc) _html += _htmlDesc
 
           if (_columns.length > 0) {
             _html += '<form class="' + fnCM('sk-form-form') + '" action="" method="post">'
@@ -94,10 +101,19 @@ export default {
               if (oColumn.column_type === 'text') {
                 _html += '' +
                       '<div class="' + fnCM('sk-form-form_item') + '">' +
-                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>' +
+                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
+
+                if (oColumn.column_desc) {
+                  if (fnCheckURL(oColumn.column_desc)) {
+                    _html += '<img class="' + fnCM('sk-form-form_item_desc-img') + '" src="' + oColumn.column_desc + '" alt="' + oColumn.column_name + '" />'
+                  } else {
+                    _html += '<div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>'
+                  }
+                }
+
+                _html += '' +
                       '  <div class="' + fnCM('sk-form-form_item_model') + '">' +
-                      '    <input class="' + fnCM('sk-form-form_item_text') + '" type="text" name="' + oColumn.id + '" data-required="' + oColumn.column_required + '" />' +
+                      '    <input class="' + fnCM('sk-form-form_item_text') + '" type="text" name="' + oColumn.id + '" data-required="' + oColumn.column_required + '" placeholder="请输入" />' +
                       '  </div>' +
                       '</div>'
               }
@@ -105,10 +121,19 @@ export default {
               if (oColumn.column_type === 'textarea') {
                 _html += '' +
                       '<div class="' + fnCM('sk-form-form_item') + '">' +
-                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>' +
+                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
+
+                if (oColumn.column_desc) {
+                  if (fnCheckURL(oColumn.column_desc)) {
+                    _html += '<img class="' + fnCM('sk-form-form_item_desc-img') + '" src="' + oColumn.column_desc + '" alt="' + oColumn.column_name + '" />'
+                  } else {
+                    _html += '<div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>'
+                  }
+                }
+
+                _html += '' +
                       '  <div class="' + fnCM('sk-form-form_item_model') + '">' +
-                      '    <textarea class="' + fnCM('sk-form-form_item_textarea') + '" type="text" name="' + oColumn.id + '" data-required="' + oColumn.column_required + '" rows="5"></textarea>' +
+                      '    <textarea class="' + fnCM('sk-form-form_item_textarea') + '" type="text" name="' + oColumn.id + '" data-required="' + oColumn.column_required + '" rows="5" placeholder="请输入"></textarea>' +
                       '  </div>' +
                       '</div>'
               }
@@ -116,8 +141,17 @@ export default {
               if (oColumn.column_type === 'radio') {
                 _html += '' +
                       '<div class="' + fnCM('sk-form-form_item') + '">' +
-                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>' +
+                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
+
+                if (oColumn.column_desc) {
+                  if (fnCheckURL(oColumn.column_desc)) {
+                    _html += '<img class="' + fnCM('sk-form-form_item_desc-img') + '" src="' + oColumn.column_desc + '" alt="' + oColumn.column_name + '" />'
+                  } else {
+                    _html += '<div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>'
+                  }
+                }
+
+                _html += '' +
                       '  <div class="' + fnCM('sk-form-form_item_model') + '">'
 
                 let _oConfig = {}
@@ -129,7 +163,7 @@ export default {
                 if (_oConfig.version === '0.0.1' && _oConfig.values.length > 0) {
                   _oConfig.values.forEach(function (val) {
                     _html += '' +
-                              '<label>' +
+                              '<label class="' + fnCM('sk-form-form_item_model-label') + '">' +
                               '  <input class="' + fnCM('sk-form-form_item_radio') + '" type="radio" name="' + oColumn.id + '" value="' + val + '" data-required="' + oColumn.column_required + '" />' +
                               '  <span class="' + fnCM('sk-form-form_item_radio_label') + '">' + val + '</span>' +
                               '</label>'
@@ -148,9 +182,17 @@ export default {
               if (oColumn.column_type === 'select') {
                 _html += '' +
                       '<div class="' + fnCM('sk-form-form_item') + '">' +
-                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_model') + '">'
+                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
+
+                if (oColumn.column_desc) {
+                  if (fnCheckURL(oColumn.column_desc)) {
+                    _html += '<img class="' + fnCM('sk-form-form_item_desc-img') + '" src="' + oColumn.column_desc + '" alt="' + oColumn.column_name + '" />'
+                  } else {
+                    _html += '<div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>'
+                  }
+                }
+
+                _html += '<div class="' + fnCM('sk-form-form_item_model') + '">'
 
                 let _oConfig = {}
 
@@ -180,9 +222,17 @@ export default {
               if (oColumn.column_type === 'checkbox') {
                 _html += '' +
                       '<div class="' + fnCM('sk-form-form_item') + '">' +
-                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>' +
-                      '  <div class="' + fnCM('sk-form-form_item_model') + '">'
+                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
+
+                if (oColumn.column_desc) {
+                  if (fnCheckURL(oColumn.column_desc)) {
+                    _html += '<img class="' + fnCM('sk-form-form_item_desc-img') + '" src="' + oColumn.column_desc + '" alt="' + oColumn.column_name + '" />'
+                  } else {
+                    _html += '<div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>'
+                  }
+                }
+
+                _html += '<div class="' + fnCM('sk-form-form_item_model') + '">'
 
                 let _oConfig = {}
 
@@ -193,7 +243,7 @@ export default {
                 if (_oConfig.version === '0.0.1' && _oConfig.values.length > 0) {
                   _oConfig.values.forEach(function (val, index) {
                     _html += '' +
-                              '<label>' +
+                              '<label class="' + fnCM('sk-form-form_item_model-label') + '">' +
                               '  <input class="' + fnCM('sk-form-form_item_checkbox') + '" type="checkbox" name="' + oColumn.id + '[' + index + ']' + '" value="' + val + '" data-required="' + oColumn.column_required + '" />' +
                               '  <span class="' + fnCM('sk-form-form_item_checkbox_label') + '">' + val + '</span>' +
                               '</label>'
@@ -212,14 +262,14 @@ export default {
 
             _html += '<div class="' + fnCM('sk-form-form_errors') + '"></div>'
 
-            _html += '<div class="' + fnCM('sk-form-form_item_submit_wrap') + '"><button class="' + fnCM('sk-form-form_item_submit') + '" type="submit">提交</button></div>'
+            _html += '<div class="' + fnCM('sk-form-form_item_submit_wrap') + '"><button class="' + fnCM('sk-form-form_item_submit') + '" style="background-color: ' + ((oFormConfigData.site_form || {}).button_background_color || '#3975f9') + ';" type="submit">' + ((oFormConfigData.site_form || {}).button_text || '提交') + '</button></div>'
 
             _html += '</form>'
           }
 
           _html += '<div class="' + fnCM('sk-form-success') + '">' +
-                '     <img class="' + fnCM('sk-form-success-img') + '" src="//asset.ibanquan.com/image/5dba55d1718a10002e188622/s.gif" />' +
-                '     <div class="' + fnCM('sk-form-success-text') + '">提交成功</div>' +
+                '     <img class="' + fnCM('sk-form-success_img') + '" src="' + successImg + '" />' +
+                '     <div class="' + fnCM('sk-form-success_text') + '">操作成功</div>' +
                 '   </div>'
 
           _html += '</div>'
@@ -228,7 +278,7 @@ export default {
         return _html
       }
 
-      if (sID) {
+      if (sID && /^(0|1)$/ig.test((oFormConfigData.site_form || {}).status)) {
         html = fnFormBuilder(oFormConfigData)
 
         $el.querySelector('.' + fnCM('sk-form-cont')).removeAttribute('data-empty')
@@ -248,7 +298,7 @@ export default {
             }
 
             if (isEditor) {
-              window.alert('后台环境提交无效')
+              window.alert('后台环境操作无效')
             } else {
               var eTarget = evt.target
               var oSendData = {}
@@ -319,27 +369,31 @@ export default {
                   }
                 }
 
-                window.fetch('/api/v1/site_form/create_collection/' + sID || null, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  credentials: 'include',
-                  body: JSON.stringify({
-                    data: oSendData
+                if ((oFormConfigData.site_form || {}).status === 0) {
+                  window.alert('表单为发布状态时才能提交数据')
+                } else {
+                  window.fetch('/api/v1/site_form/create_collection/' + sID || null, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                      data: oSendData
+                    })
+                  }).then(function (oRes) {
+                    return oRes.json()
+                  }).then(function (oData) {
+                    if ((oData || {}).code === 200) {
+                      eForm.classList.add('i-success')
+                      // (eFormSubmitWrap || {}).innerHTML = '<span class="' + fnCM('sk-form-form_done') + '">操作成功</span>'
+                    } else {
+                      (eFormErrors || {}).innerHTML = '<div class="' + fnCM('sk-form-form_errors_item') + '">操作失败，请稍后再试</div>'
+                    }
+                  }).catch(oError => {
+                    (eFormErrors || {}).innerHTML = '<div class="' + fnCM('sk-form-form_errors_item') + '">操作失败，请稍后再试</div>'
                   })
-                }).then(function (oRes) {
-                  return oRes.json()
-                }).then(function (oData) {
-                  if ((oData || {}).code === 200) {
-                    eForm.classList.add('i-success')
-                    // (eFormSubmitWrap || {}).innerHTML = '<span class="' + fnCM('sk-form-form_done') + '">提交成功</span>'
-                  } else {
-                    (eFormErrors || {}).innerHTML = '<div class="' + fnCM('sk-form-form_errors_item') + '">提交失败，请稍后再试</div>'
-                  }
-                }).catch(oError => {
-                  (eFormErrors || {}).innerHTML = '<div class="' + fnCM('sk-form-form_errors_item') + '">提交失败，请稍后再试</div>'
-                })
+                }
               }
             }
           })
@@ -350,120 +404,312 @@ export default {
         } else {
           window.$($el.querySelector('.' + fnCM('sk-form-cntr'))).html('<div style="text-align: center; padding: 10px 0;">暂无内容</div>')
         }
+      } else if ('site_form' in oFormConfigData) {
+        $el.classList.add('i-close')
+
+        $el.querySelector('.' + fnCM('sk-form-cntr')).innerHTML = '' +
+          '<div class="sk-form-close">' +
+          '  <img class="sk-form-close_img" src="' + closeImg + '" alt="close_img">' +
+          '  <div class="sk-form-close_text">您所访问的表单已停止收集</div>' +
+          '</div>'
       } else {
-        $el.querySelector('.' + fnCM('sk-form-cont')).setAttribute('data-empty', 'sk-form-form')
-        $el.querySelector('.' + fnCM('sk-form-cntr')).innerHTML = ''
+        // $el.querySelector('.' + fnCM('sk-form-cont')).setAttribute('data-empty', 'form')
+        $el.querySelector('.' + fnCM('sk-form-cntr')).innerHTML = '<div style="text-align: center; line-height: 1em;">暂无此表单</div>'
       }
+
+      $el.classList.remove('i-loading')
     }
   }
 }
 </script>
 
 <style>
-.sk-form-view {
-  padding: 60px 0;
+.sk-form-box {
+  box-sizing: border-box;
+  margin: 80px auto;
+  padding: 50px 0 60px;
   overflow: hidden;
   display: block;
   width: auto;
-  background-color: #fff
+  max-width: 900px;
+  border: 1px solid #d5d5d5;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+}
+.sk-form-box.i-loading,
+.sk-form-box.i-close {
+  border: none;
+  background: none;
 }
 .sk-form-cont {
-    box-sizing: border-box;
-    margin: 0 auto;
-    padding: 0 15px;
-    max-width: 600px;
-    line-height: 1em;
-    font-size: 14px;
+  margin: 0 auto;
+  padding: 0 15px;
+  max-width: 700px;
+  line-height: 1em;
+  font-size: 14px;
 }
-.sk-form-name {
-    margin: 0 0 15px;
-    line-height: 1.6em;
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
+.sk-form-close {
+  margin: 40px 0 50px;
 }
-.sk-form-desc {
-    margin: 0 0 30px;
-    line-height: 1.6em;
-    font-size: 18px;
-    text-align: center;
+.sk-form-close_img {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 280px;
 }
-.sk-form-form.i-success .sk-form-form {
-  display: none;
+.sk-form-close_text {
+  margin: 36px 0 0;
+  line-height: 1em;
+  font-size: 28px;
+  text-align: center;
+  color: #777;
+  font-weight: normal;
 }
 .sk-form-success {
   display: none;
 }
-.sk-form-form.i-success .sk-form-success {
+.sk-form-form.i-success ~ .sk-form-success {
   display: block;
 }
-.sk-form-success-img {
+.sk-form-success_img {
   display: block;
   margin: 0 auto;
-  width: 220px;
+  width: 160px;
 }
-.sk-form-success-text {
+.sk-form-success_text {
   line-height: 1em;
   font-size: 20px;
   text-align: center;
 }
+.sk-form-name {
+  margin: 0;
+  line-height: 1.6em;
+  font-size: 26px;
+  text-align: center;
+}
+.sk-form-desc {
+  margin: 4px 0 0;
+  line-height: 1.6em;
+  font-size: 16px;
+  text-align: center;
+  color: #999;
+}
+.sk-form-form {
+  margin: 50px 0 0;
+}
+.sk-form-form.i-success {
+  display: none;
+}
 .sk-form-form_item {
-    margin: 25px 0 0;
+  margin: 40px 0 0;
 }
 .sk-form-form_item_name {
-    line-height: 1.7em;
-    font-size: 16px;
+  margin: 0 0 4px;
+  line-height: 1.7em;
+  font-weight: bold;
 }
 .sk-form-form_item_desc {
-    margin: 0 0 5px;
-    line-height: 1.7em;
-    font-size: 14px;
-    color: #999;
+  margin: 0 0 4px;
+  line-height: 1.7em;
+  color: #b2b2b2;
+}
+.sk-form-form_item_desc-img {
+  display: block;
+  margin: 10px 0 0;
+  max-width: 100%;
+}
+.sk-form-form_item_model {
+  margin: 18px 0 0;
+}
+.sk-form-form_item_model-label {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin: 11px 0 0;
+  padding: 0 2px;
+  line-height: 1.7em;
+  white-space: normal;
+  word-break: break-all;
 }
 .sk-form-form_item_text {
-    box-sizing: border-box;
-    width: 100%;
-    border: 1px solid #999;
+  display: block;
+  box-sizing: border-box;
+  padding: 3px 10px;
+  width: 100%;
+  border: 1px solid #bfbfbf;
+  border-radius: 3px;
+  font-size: 14px;
+  line-height: 1.8em;
+  outline: none;
 }
 .sk-form-form_item_textarea {
-    resize: none;
-    box-sizing: border-box;
-    width: 100%;
-    border: 1px solid #999;
-    outline: none;
+  display: block;
+  resize: none;
+  box-sizing: border-box;
+  padding: 4px 10px;
+  width: 100%;
+  border: 1px solid #bfbfbf;
+  border-radius: 3px;
+  font-size: 14px;
+  line-height: 1.8em;
+  outline: none;
+}
+.sk-form-form_item_select {
+  display: inline-block;
+  box-sizing: border-box;
+  appearance: none;
+  margin: 0;
+  padding: 3px 26px 3px 10px;
+  min-width: 180px;
+  max-width: 100%;
+  border: 1px solid #bfbfbf;
+  border-radius: 3px;
+  line-height: 1.7em;
+  font-size: 14px;
+  background-color: #fff;
+  color: #6b6b6b;
+  outline: none;
+  background-repeat: no-repeat;
+  background-position: center right 9px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAQAAADWbbXjAAAAGklEQVR42mNg+I8FMjBgE0IXRgJYhGDCUAAAtRYd48XEOp8AAAAASUVORK5CYII=")
 }
 .sk-form-form_item_radio_label {
-    margin: 0 10px 0 0;
+  display: inline-block;
+  margin: 0 10px 0 8px;
 }
 .sk-form-form_item_checkbox_label {
-    margin: 0 10px 0 0;
+  display: inline-block;
+  margin: 0 10px 0 8px;
 }
 .sk-form-form_errors {
-    margin: 25px 0 0;
+  margin: 25px 0 0;
 }
 .sk-form-form_errors_item {
-    font-size: 14px;
-    line-height: 1.6em;
-    color: #f65;
+  font-size: 14px;
+  line-height: 1.6em;
+  color: #f65;
 }
 .sk-form-form_item_submit_wrap {
-    margin: 25px 0 0;
-    text-align: center;
+  margin: 60px 0 0;
+  text-align: center;
 }
 .sk-form-form_item_submit {
-    background: none;
-    background-color: #fff;
-    padding: 8px 20px;
-    border-radius: 3px;
-    font-size: 14px;
-    line-height: 1em;
-    outline: none;
-    border: 1px solid #999;
+  box-sizing: border-box;
+  background: none;
+  /* background-color: #3975f9; */
+  padding: 10px 20px;
+  min-width: 142px;
+  max-width: 100%;
+  border-radius: 3px;
+  font-size: 15px;
+  line-height: 1.6em;
+  outline: none;
+  border: none;
+  color: #fff;
 }
 .sk-form-form_done {
-    display: inline-block;
-    padding: 0 0 25px;
+  display: inline-block;
+  padding: 0 0 25px;
+  font-size: 16px;
+  line-height: 32px;
+}
+
+@media screen and (max-width: 750px) {
+  .sk-form-box {
+    margin: 30px 16px 50px;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+  .sk-form-cont {
+    padding: 0;
+  }
+  .sk-form-close {
+    margin: 50px 0;
+  }
+  .sk-form-close_img {
+    max-width: 190px;
+  }
+  .sk-form-close_text {
+    margin: 20px 0 0;
+    font-size: 15px;
+  }
+  .sk-form-success {
+    margin: 16px 0 0;
+    padding: 16px 16px 46px;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+  .sk-form-name {
+    font-size: 24px;
+  }
+  .sk-form-desc {
+    font-size: 15px;
+  }
+  .sk-form-form {
+    margin: 25px 0 0;
+  }
+  .sk-form-form_item {
+    margin: 16px 0 0;
+    padding: 16px 16px 20px;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+  .sk-form-form_item_name {
+    margin: 0 0 1px;
+    font-size: 18px;
+  }
+  .sk-form-form_item_desc {
+    margin: 0;
+  }
+  .sk-form-form_item_desc-img {
+    margin: 10px 0;
+  }
+  .sk-form-form_item_model {
+    margin: 13px 0 0;
+  }
+  .sk-form-form_item_model-label {
+    margin: 0 -16px 0 0;
+    padding: 15px 2px;
+    border: 0 solid #ededed;
+    border-width: 1px 0 0;
+  }
+  .sk-form-form_item_model-label:last-child {
+    padding: 15px 2px 0;
+  }
+  .sk-form-form_item_select {
+    width: 100%;
+    line-height: 2.6em;
+  }
+  .sk-form-form_item_text {
+    box-sizing: border-box;
+    margin: 0 -16px 0 0;
+    padding: 15px 16px 0 0;
+    width: calc(100% + 16px);
+    border: 0 solid #ededed;
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+  .sk-form-form_item_textarea {
+    box-sizing: border-box;
+    margin: 0 -16px 0 0;
+    padding: 15px 16px 0 0;
+    width: calc(100% + 16px);
+    height: calc(1.8em * 3 + 16px);
+    border: 0 solid #ededed;
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+  .sk-form-form_item_submit_wrap {
+    margin: 40px 0 0;
+  }
+  .sk-form-form_item_submit {
+    box-sizing: border-box;
+    padding: 15px 20px;
+    width: 100%;
+    border-radius: 4px;
     font-size: 16px;
-    line-height: 32px;
+  }
 }
 </style>

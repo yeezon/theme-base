@@ -10,9 +10,6 @@
       <div class="img-desc"
         v-if="(gallery.images[activeIndex] || {}).alt"
         >{{(gallery.images[activeIndex] || {}).alt || ''}}</div>
-      <!-- <div class="img-desc">
-        每个人的气质与众不同，这样的气质会伴随一生，成就个人的辉煌事业。作为国家的君主，或者领导人，他们成名前的气质又如何呢？
-      </div> -->
       <div class="gallery-info-mob gallery-info-multi-mob">
       <div class="mob-icon-inner">
         <span class="mob-icon" v-if="!gallery.is_favor" @click="fnFavor(gallery)">
@@ -23,7 +20,7 @@
           <svg-icon name="gallery-mob-favor-active" class="svg-favor"></svg-icon>
           <span class="tips" :class="gallery.favor_count > 9 ? 'diget-favor' : 'unit-favor'" v-if="gallery.favor_count">{{gallery.favor_count}}</span>
         </span>
-        <span class="mob-icon" @click="fnLink">
+        <span class="mob-icon" v-if="isShowComment" @click="fnLink">
           <svg-icon name="gallery-mob-comment" class="svg-comment"></svg-icon>
           <span class="tips" :class="gallery.comment_count > 9 ? 'diget-comment' : 'unit-comment'" v-if="gallery.comment_count">{{gallery.comment_count}}</span>
         </span>
@@ -44,6 +41,10 @@ export default {
     gallery: {
       type: Object,
       default: () => {}
+    },
+    isShowComment: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -173,7 +174,7 @@ export default {
   left: 10px;
 }
 .tips.diget-comment{
-  left: 5;
+  left: 5px;
 }
 .tips.unit-favor{
   left: 10px;

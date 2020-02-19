@@ -347,6 +347,9 @@ export default {
   border-bottom: 1px solid #ddd;
 }
 .s-comment-img{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   width: 65px;
   height: 65px;
@@ -357,9 +360,10 @@ export default {
   flex: 0 1 65px;
 }
 .s-comment-img img{
+  display: block;
   max-width: 100%;
   max-height: 100%;
-  display: block;
+  object-fit: contain;
 }
 .s-comment-content{
   padding-left: 30px;

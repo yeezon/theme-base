@@ -5,7 +5,7 @@
       <tu-breadcrumbs first="所有图集" firstLink="/gallery"></tu-breadcrumbs>
     </div>
     <tu-mob-back title="所有图集" class="mob-back"></tu-mob-back>
-    <tu-loading v-if="galleryLoading && firstLoading" :isLoading="galleryLoading" text="加载中..."></tu-loading>
+    <tu-loading v-if="galleryLoading" :isLoading="galleryLoading" text="加载中..."></tu-loading>
     <div v-else class="gallery-con">
       <div class="gallery-btn">
         <span class="gallery-btn-item gallery-btn-two" :class="{'active': !config.style}" @click="fnSelect(0)">全部</span>
@@ -18,7 +18,7 @@
           <template v-if="item.style === 1 && item.show">
             <!-- 图片轮播 -->
             <gallery-slide-item :images="item.images" :id="item.id" :cover="item.cover"></gallery-slide-item>
-            <gallery-info :info="item"></gallery-info>
+            <gallery-info :info="item" :is-show-comment = isShowComment></gallery-info>
           </template>
           <template v-if="item.style === 2 && item.show">
             <!-- 多图展示 -->
@@ -37,7 +37,7 @@
                 </li>
               </ul>
             </div>
-            <gallery-info :info="item"></gallery-info>
+            <gallery-info :info="item" :is-show-comment = isShowComment></gallery-info>
           </template>
           <template v-if="item.style === 3 && item.show">
           </template>
@@ -46,9 +46,8 @@
       <div class="empty" v-else>
         暂无图集
       </div>
-      <tu-paginate-lite v-if="imagePosts.length" :paging="config.page" :total="total" @change="handlePage" @change-scroll="handleScroll"></tu-paginate-lite>
+      <tu-paginate-lite v-if="imagePosts.length" :paging="config.page" :total="total" @change="handlePage"></tu-paginate-lite>
     </div>
-    <tu-mob-loading :isLoading="galleryMobLoading"></tu-mob-loading>
   </div>
 </template>
 
@@ -60,14 +59,17 @@ function getImagePosts ({ size, page, style }) {
     credentials: 'include'
   })
 }
-
+function getSetting () {
+  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+    credentials: 'include'
+  })
+}
 export default {
   data () {
     return {
       galleryLoading: true,
-      firstLoading: true,
-      galleryMobLoading: false,
       imagePosts: [],
+      isShowComment: false,
       total: 1,
       config: {
         style: 0,
@@ -85,28 +87,23 @@ export default {
   },
   methods: {
     init () {
-      if (this.nWidth > 768) {
-        this.galleryLoading = true
-      } else {
-        this.galleryMobLoading = true
-      }
+      this.galleryLoading = true
       getImagePosts(this.config).then(oRes => {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
           this.total = res.msg.paging.pages
           this.paging = res.msg.paging
-          if (this.nWidth > 768) {
-            this.galleryLoading = false
-            this.imagePosts = res.msg.results.items || []
-          } else {
-            this.firstLoading = false
-            this.galleryMobLoading = false
-            if (this.config.page === 1) {
-              this.imagePosts = []
-            }
-            this.imagePosts = this.imagePosts.concat(res.msg.results.items)
-          }
+          this.galleryLoading = false
+          this.imagePosts = res.msg.results.items || []
+        }
+      })
+      getSetting().then(oRes => {
+        return oRes.json()
+      }).then(res => {
+        if (res.code === 200) {
+          let _data = res.msg.results
+          this.isShowComment = _data.enable_option
         }
       })
     },
@@ -117,9 +114,6 @@ export default {
       this.$router.push(`/gallery/${id}`)
     },
     handlePage (index) {
-      this.config.page = index
-    },
-    handleScroll (index) {
       this.config.page = index
     }
   },

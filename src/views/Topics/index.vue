@@ -5,15 +5,14 @@
       <div class="topics-breadcrumbs">
         <tu-breadcrumbs first-link="/topics" first="专题列表"></tu-breadcrumbs>
       </div>
-      <tu-loading v-if="topicLoading  && firstLoading" :isLoading="topicLoading" text="加载中..."></tu-loading>
+      <tu-loading v-if="topicLoading" :isLoading="topicLoading" text="加载中..."></tu-loading>
       <div v-else class="topics-main">
         <items v-if="topics.length" :topics="topics" @favor="FnFavor" @favor-out="FnFavorOut"></items>
         <div class="empty" v-else>
           暂无专题
         </div>
-        <tu-paginate-lite v-if="topics.length" :total="total" :page="config.page" @change="handlePage" @change-scroll="handleScroll"></tu-paginate-lite>
+        <tu-paginate-lite v-if="topics.length" :total="total" :page="config.page" @change="handlePage"></tu-paginate-lite>
       </div>
-      <tu-mob-loading :isLoading="topicMobLoading"></tu-mob-loading>
     </div>
   </div>
 </template>
@@ -28,9 +27,7 @@ function getTopics () {
 export default {
   data () {
     return {
-      firstLoading: true,
       topicLoading: true,
-      topicMobLoading: false,
       topics: [],
       total: 1,
       config: {
@@ -46,25 +43,15 @@ export default {
   },
   methods: {
     init () {
-      if (this.nWidth > 768) {
-        this.topicLoading = true
-      } else {
-        this.topicMobLoading = true
-      }
+      this.topicLoading = true
       getTopics().then(oRes => {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
           this.paging = res.msg.paging
           this.total = res.msg.paging.pages
-          if (this.nWidth > 768) {
-            this.topicLoading = false
-            this.topics = res.msg.results.items || []
-          } else {
-            this.firstLoading = false
-            this.topicMobLoading = false
-            this.topics = this.topics.concat(res.msg.results.items || [])
-          }
+          this.topicLoading = false
+          this.topics = res.msg.results.items || []
         }
       })
     },
@@ -111,9 +98,6 @@ export default {
       })
     },
     handlePage (index) {
-      this.config.page = index
-    },
-    handleScroll (index) {
       this.config.page = index
     }
   },

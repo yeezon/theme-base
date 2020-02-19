@@ -22,7 +22,7 @@
           <div class="vote-radio" v-if="vote.type === 2">
             <tu-vote-pk :vote="vote" :title="false" @pk="fnPk"></tu-vote-pk>
           </div>
-          <!-- <div class="s-talk">
+          <div class="s-talk" v-if="isShowComment">
             <div class="mob-block">
             </div>
             <tu-publish-comment @publish="fnPublish" ref="publish"></tu-publish-comment>
@@ -35,7 +35,7 @@
               @more-comment="fnMoreComment"
               >
             </tu-comment>
-          </div> -->
+          </div>
         </div>
       </div>
     </template>
@@ -54,6 +54,11 @@ function getMoreComment (id, lastId) {
     credentials: 'include'
   })
 }
+function getSetting () {
+  return window.fetch(`/api/v1/topic-votes/comments/setting`, {
+    credentials: 'include'
+  })
+}
 export default {
   data () {
     return {
@@ -63,6 +68,10 @@ export default {
       vote: '',
       lastId: '',
       moreCommentBtn: false,
+      minLength: '',
+      isShowComment: true,
+      isReviewComment: true,
+      isOrder: '',
       hashComment: this.$route.hash
     }
   },
@@ -87,6 +96,17 @@ export default {
             this.lastId = this.vote.comments[19].id
             this.moreCommentBtn = true
           }
+        }
+      })
+      getSetting().then(oRes => {
+        return oRes.json()
+      }).then(res => {
+        if (res.code === 200) {
+          let _data = res.msg.results
+          this.minLength = _data.min_content_length
+          this.isShowComment = _data.enable_option
+          this.isReviewComment = _data.enable_review
+          this.isOrder = _data.sort_order
         }
       })
     },
@@ -175,17 +195,37 @@ export default {
         return oRes.json()
       }).then(function (oData) {
         if ((oData || {}).code === 200) {
-          _this.vote.comment_count++
-          _this.vote.comments.unshift({
+          let inputData = {
             customer: {
-              avatar_id: '//asset.ibanquan.com/image/5c50179b4194e52dd20011cf/s.png?v=1548752795',
+              avatar: {
+                src: _this.$store.state.account.oInfo.avatar_url
+              },
               name: _this.oCustomer.name
             },
             id: oData.msg.results.id,
             created_at: new Date(),
             like_count: 0,
             content: comment
-          })
+          }
+          if (!_this.isReviewComment) {
+            if (_this.isOrder) {
+              _this.vote.comments.push(inputData)
+            } else {
+              _this.vote.comments.unshift(inputData)
+            }
+            _this.vote.comment_count++
+          }
+          _this.$toast.info('提交成功')
+          // _this.vote.comments.unshift({
+          //   customer: {
+          //     avatar_id: '//asset.ibanquan.com/image/5c50179b4194e52dd20011cf/s.png?v=1548752795',
+          //     name: _this.oCustomer.name
+          //   },
+          //   id: oData.msg.results.id,
+          //   created_at: new Date(),
+          //   like_count: 0,
+          //   content: comment
+          // })
         } else {
           console.log('评论失败')
         }

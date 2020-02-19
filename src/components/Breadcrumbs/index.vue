@@ -51,10 +51,12 @@ export default {
   color: #333;
 }
 .breadcrumbs .home{
-  color: var(--main_color);
+  color: #0f57db;
+  /* color: var(--main_color); */
 }
 .breadcrumbs .first-link{
-  color: var(--main_color);
+  color: #0f57db;
+  /* color: var(--main_color); */
 }
 
 .arrow-right {

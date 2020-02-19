@@ -5,7 +5,7 @@
 <template>
 <label class="sk-checkout-remarks">
   <div class="s-title">顾客备注</div>
-  <input class="s-ipt" @input="fnInput" :value="value" type="text" placeholder="订单补充说明" />
+  <input class="s-ipt" @input="fnInput" :value="value" type="text" placeholder="订单补充说明" maxlength="200" />
 </label>
 </template>
 

@@ -26,7 +26,7 @@
           <su-input placeholder="身份证（选填）" v-model="oFormData.id_card"></su-input>
         </su-form-item>
         <!-- open 是避免 Vue 缓存，后面用 Vuex 后可去掉 -->
-        <su-form-item v-if="open && isSigned()" class="s-default" prop="is_default">
+        <su-form-item v-if="open && isSigned" class="s-default" prop="is_default">
           <su-switch active-text="默认地址" v-model="oFormData.is_default"></su-switch>
         </su-form-item>
       </su-form>
@@ -107,6 +107,11 @@ export default {
       }
     }
   },
+  computed: {
+    isSigned () {
+      return (this.$store.state.account || {}).isSigned || false
+    }
+  },
   watch: {
     address () {
       this.initFormData()
@@ -116,10 +121,6 @@ export default {
     this.initFormData()
   },
   methods: {
-    isSigned () {
-      // computed 会缓存
-      return (window.$account || {}).id || false
-    },
     initFormData () {
       const oAddress = this.address || {}
       const _oFormData = {}
@@ -198,7 +199,7 @@ export default {
     fnSent (cb) {
       const oAddress = this.address || {}
 
-      if (this.isSigned() && (oAddress.id || oAddress.id === 0)) {
+      if (this.isSigned && (oAddress.id || oAddress.id === 0)) {
         // 修改地址
         this.$sdk.address.save(this.oFormData, data => {
           let err = null
@@ -220,7 +221,7 @@ export default {
             data: _oAddress
           })
         })
-      } else if (this.isSigned()) {
+      } else if (this.isSigned) {
         // 新增地址
         this.$sdk.address.create(this.oFormData, data => {
           let err = null

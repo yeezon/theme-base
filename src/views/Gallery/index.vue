@@ -35,25 +35,37 @@
             </span>
           </div> -->
         </div>
-        <!-- <div class="comment">
-          <su-input class="input" type="textarea" placeholder='发表你的精彩评论' v-model="comment"></su-input>
-          <span class="comment-submit" @click="fnComment(gallery.id,comment)">提交</span>
-        </div> -->
-        <!-- <div class="comments">
-          <tu-comment
-            :sum="gallery.comment_count"
-            :comments="comments"
-            :more-btn="moreCommentBtn"
-            @zan="fnZan"
-            @zan-delete="fnZanDelete"
-            @more-comment="fnMoreComment"
-            >
-            </tu-comment>
-        </div> -->
+        <template v-if="isShowComment">
+          <!-- <su-form
+            :model="inputData"
+            :rules="rules"
+            ref="form"
+            class="comment">
+            <su-form-item class="input" prop="comment">
+              <su-input type="textarea" :placeholder='`发表你的精彩评论`' v-model="inputData.comment" maxlength="1000"></su-input>
+            </su-form-item>
+            <span class="comment-submit" @click="fnComment(gallery.id,inputData.comment)">提交</span>
+          </su-form> -->
+          <div class="comment">
+            <su-input class="input" type="textarea" placeholder='发表你的精彩评论' v-model="comment"></su-input>
+            <span class="comment-submit" @click="fnComment(gallery.id,comment)">提交</span>
+          </div>
+          <div class="comments">
+            <tu-comment
+              :sum="gallery.comment_count"
+              :comments="comments"
+              :more-btn="moreCommentBtn"
+              @zan="fnZan"
+              @zan-delete="fnZanDelete"
+              @more-comment="fnMoreComment"
+              >
+              </tu-comment>
+          </div>
+        </template>
       </div>
     </template>
       <div v-else class="gallery-mob">
-        <mob-slide :gallery="gallery"></mob-slide>
+        <mob-slide :gallery="gallery" :is-show-comment="isShowComment"></mob-slide>
       </div>
   </div>
 </template>
@@ -73,16 +85,40 @@ function getMoreComment (id, lastId) {
     credentials: 'include'
   })
 }
+function getSetting () {
+  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+    credentials: 'include'
+  })
+}
 export default {
   data () {
+    var checkGalleryComment = (rule, value, callback) => {
+      this.fncheckCommentStater(value, callback)
+    }
     return {
       id: this.$route.params.id,
       gallery: null,
+      inputData: {
+        comment: ''
+      },
       comment: '',
       comments: [],
       activeIndex: 1,
       moreCommentBtn: false,
       lastId: '',
+      minLength: '',
+      isShowComment: true,
+      isReviewComment: true,
+      isOrder: '',
+      rules: {
+        comment: [
+          {
+            required: true,
+            validator: checkGalleryComment,
+            trigger: 'blur'
+          }
+        ]
+      },
       nWidth: document.documentElement.clientWidth || document.body.clientWidth
     }
   },
@@ -108,6 +144,17 @@ export default {
           }
         }
       })
+      getSetting().then(oRes => {
+        return oRes.json()
+      }).then(res => {
+        if (res.code === 200) {
+          let _data = res.msg.results
+          this.minLength = _data.min_content_length
+          this.isShowComment = _data.enable_option
+          this.isReviewComment = _data.enable_review
+          this.isOrder = _data.sort_order
+        }
+      })
     },
     fnActiveIndex (val) {
       this.activeIndex = val + 1
@@ -130,17 +177,28 @@ export default {
       }).then(function (oData) {
         if ((oData || {}).code === 200) {
           console.log('评论成功')
-          _this.gallery.comment_count++
-          _this.gallery.comments.unshift({
+          let inputData = {
             customer: {
-              avatar_id: '//asset.ibanquan.com/image/5c50179b4194e52dd20011cf/s.png?v=1548752795',
+              avatar: {
+                src: _this.$store.state.account.oInfo.avatar_url
+              },
               name: _this.oCustomer.name
             },
             id: oData.msg.results.id,
             created_at: new Date(),
             like_count: 0,
             content: comment
-          })
+          }
+          if (!_this.isReviewComment) {
+            if (_this.isOrder) {
+              _this.gallery.comments.push(inputData)
+            } else {
+              _this.gallery.comments.unshift(inputData)
+            }
+            _this.gallery.comment_count++
+          }
+          _this.comment = ''
+          _this.$toast.info('提交成功')
         } else {
           console.log('评论失败')
         }
@@ -278,6 +336,15 @@ export default {
       }).catch(oError => {
         window.alert('取消点赞失败')
       })
+    },
+    fncheckCommentStater (value, callback) {
+      if (value === '') {
+        return callback(new Error('请输入评论'))
+      } else if (value.length < this.minLength) {
+        return callback(new Error(`至少${this.minLength}个字起评`))
+      } else {
+        return callback()
+      }
     },
     fnMoreComment () {
       getMoreComment(this.id, this.lastId).then(oRes => {

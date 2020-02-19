@@ -57,10 +57,10 @@ export default {
       }
     },
     skus () {
-      this.initSkuData()
+      this.init()
     },
     options () {
-      this.initKeys()
+      this.init()
     },
     nNowSku (nVal) {
       this.fnChange(nVal)

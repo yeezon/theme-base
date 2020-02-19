@@ -176,7 +176,7 @@ export default {
 
       switch (true) {
         case value.length < 4:
-          errTips = '用户名需包含4-30个字符，包括数字，大小写字母，以及符号'
+          errTips = '用户名需包含4-16个字符（数字、大小写字母和符号）'
           break
         case this.allowEmail && !this.allowMobile && !this.allowUserName && !isEmail:
           errTips = '请输入正确的邮箱账号！'
@@ -185,7 +185,7 @@ export default {
           errTips = '请输入正确的手机号！'
           break
         case this.allowUserName && !this.allowMobile && !this.allowEmail && !isUsername:
-          errTips = '请输入正确的用户名！'
+          errTips = '用户名需包含4-16个字符（数字、大小写字母和符号）'
           break
         case this.allowEmail && this.allowMobile && !this.allowUserName && (!isEmail && !isMobile):
           errTips = '请输入正确的手机号码或邮箱账号！'
