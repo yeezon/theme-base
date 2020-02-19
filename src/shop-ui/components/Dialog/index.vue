@@ -61,6 +61,8 @@ export default {
     z-index: 997;
     position: fixed;
     display: flex;
+    align-items: center;
+    justify-content: center;
     top: 0;
     left: 0;
     width: 100vw;
@@ -77,11 +79,11 @@ export default {
   }
   .s-inner {
     box-sizing: border-box;
-    margin: auto;
+    /* margin: auto; */
     padding: 25px 30px;
     width: min-content;
     max-width: calc(100% - 15px);
-    border: 0 solid transform;
+    border: none;
     border-radius: 5px;
     background-color: #fff;
     /* transform: translateY(-15%); */
