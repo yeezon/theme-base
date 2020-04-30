@@ -76,7 +76,7 @@ export default {
 .select-item{
   border-radius: 4px;
   overflow: hidden;
-  background:#f5f5f5;
+  background:#fff;
   line-height: 28px;
   margin-bottom: 15px;
   padding: 0 9px 0 15px;
@@ -84,6 +84,7 @@ export default {
   display: flex;
   justify-content: space-around;
   flex-direction: row-reverse;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
 }
 .select-item.select-item-result{
   justify-content: space-between;
@@ -141,6 +142,11 @@ export default {
   }
   .item-progress{
     height: 35px;
+  }
+}
+@media screen and (min-width:768px) {
+  .title:hover{
+    color: #5482fc;
   }
 }
 </style>

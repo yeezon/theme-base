@@ -1,6 +1,6 @@
 <template>
   <div class="topics-outer">
-    <tu-mob-back title="专题" class="mob-back"></tu-mob-back>
+    <!-- <div class="mob-back">所有专题</div> -->
     <div class="topics">
       <div class="topics-breadcrumbs">
         <tu-breadcrumbs first-link="/topics" first="专题列表"></tu-breadcrumbs>
@@ -19,8 +19,8 @@
 
 <script>
 import items from './components/items'
-function getTopics () {
-  return window.fetch(`/api/v1/topics`, {
+function getTopics ({ size, page }) {
+  return window.fetch(`/api/v1/topics?size=${size}&page=${page}`, {
     credentials: 'include'
   })
 }
@@ -44,7 +44,7 @@ export default {
   methods: {
     init () {
       this.topicLoading = true
-      getTopics().then(oRes => {
+      getTopics(this.config).then(oRes => {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
@@ -224,14 +224,18 @@ export default {
   text-align: center;
   color: #777;
 }
+.mob-back{
+  display: none;
+}
 @media screen and (max-width:768px){
   .topics{
-    padding: 12px 16px;
+    padding: 0 16px;
     box-sizing: border-box;
     background: #f5f5f5;
   }
   .topics-breadcrumbs{
-    display: none;
+    padding-top: 20px;
+    /* display: none; */
   }
   .title{
     padding: 5px 0 0 5px;
@@ -256,6 +260,13 @@ export default {
   }
   .topic-introduce{
     font-size: 12px;
+  }
+  .mob-back{
+    display: block;
+    font-size: 18px;
+    color: #000;
+    background: #f5f5f5;
+    padding: 18px 16px;
   }
 }
 </style>

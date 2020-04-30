@@ -147,9 +147,9 @@ export default {
             this.isCaptchaOpen = true
           }
         } else if (code === 201) {
-          alert(message)
+          this.$toast.info(message)
         } else {
-          alert(message)
+          this.$toast.info(message)
         }
       })
     },

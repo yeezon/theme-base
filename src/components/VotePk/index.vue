@@ -251,4 +251,9 @@ export default {
     margin-right: 20px;
   }
 }
+@media screen and (min-width:768px) {
+  .title:hover{
+    color: #5482fc;
+  }
+}
 </style>

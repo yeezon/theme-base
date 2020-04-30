@@ -111,7 +111,7 @@
               <option value="质量问题">质量问题</option>
               <option value="少件/漏发">少件/漏发</option>
               <option value="包装/商品破损">包装/商品破损</option>
-              <option value="假冒品牌">假冒品牌</option>
+              <!-- <option value="假冒品牌">假冒品牌</option> -->
               <option value="发票问题">发票问题</option>
               <option value="卖家发错货">卖家发错货</option>
               <option value="其他">其他</option>

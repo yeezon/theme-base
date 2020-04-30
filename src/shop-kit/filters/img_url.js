@@ -41,7 +41,9 @@ function getImageUrl (imageID, imageName, imageSize, imageEpoch) {
 }
 
 function imgURL (image, size = '') {
-  // size 为 '' 即为原尺寸
+  // 参数类型处理
+  image = image || ''
+  size = size || '' // size 为 '' 即为原尺寸
 
   // 根据屏幕自动优化大小
   const nDevicePixelRatio = window.devicePixelRatio || 1

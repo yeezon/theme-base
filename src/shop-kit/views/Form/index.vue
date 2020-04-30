@@ -100,7 +100,7 @@ export default {
 
               if (oColumn.column_type === 'text') {
                 _html += '' +
-                      '<div class="' + fnCM('sk-form-form_item') + '">' +
+                      '<div class="' + fnCM('sk-form-form_item') + ' ' + (oColumn.column_required ? fnCM('sk-form-form_item_required') : '') + '">' +
                       '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
 
                 if (oColumn.column_desc) {
@@ -120,7 +120,7 @@ export default {
 
               if (oColumn.column_type === 'textarea') {
                 _html += '' +
-                      '<div class="' + fnCM('sk-form-form_item') + '">' +
+                      '<div class="' + fnCM('sk-form-form_item') + ' ' + (oColumn.column_required ? fnCM('sk-form-form_item_required') : '') + '">' +
                       '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
 
                 if (oColumn.column_desc) {
@@ -140,7 +140,7 @@ export default {
 
               if (oColumn.column_type === 'radio') {
                 _html += '' +
-                      '<div class="' + fnCM('sk-form-form_item') + '">' +
+                      '<div class="' + fnCM('sk-form-form_item') + ' ' + (oColumn.column_required ? fnCM('sk-form-form_item_required') : '') + '">' +
                       '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
 
                 if (oColumn.column_desc) {
@@ -181,7 +181,7 @@ export default {
 
               if (oColumn.column_type === 'select') {
                 _html += '' +
-                      '<div class="' + fnCM('sk-form-form_item') + '">' +
+                      '<div class="' + fnCM('sk-form-form_item') + ' ' + (oColumn.column_required ? fnCM('sk-form-form_item_required') : '') + '">' +
                       '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
 
                 if (oColumn.column_desc) {
@@ -221,7 +221,7 @@ export default {
 
               if (oColumn.column_type === 'checkbox') {
                 _html += '' +
-                      '<div class="' + fnCM('sk-form-form_item') + '">' +
+                      '<div class="' + fnCM('sk-form-form_item') + ' ' + (oColumn.column_required ? fnCM('sk-form-form_item_required') : '') + '">' +
                       '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
 
                 if (oColumn.column_desc) {
@@ -504,7 +504,16 @@ export default {
 .sk-form-form_item {
   margin: 40px 0 0;
 }
+
+.sk-form-form_item_required .sk-form-form_item_name::after {
+  content: '*';
+  position: absolute;
+  left: -1em;
+  color: #f65;
+}
+
 .sk-form-form_item_name {
+  position: relative;
   margin: 0 0 4px;
   line-height: 1.7em;
   font-weight: bold;
@@ -655,6 +664,10 @@ export default {
     padding: 16px 16px 20px;
     border-radius: 4px;
     background-color: #fff;
+  }
+  .sk-form-form_item_required .sk-form-form_item_name::after {
+    left: -.75em;
+    font-size: 14px;
   }
   .sk-form-form_item_name {
     margin: 0 0 1px;

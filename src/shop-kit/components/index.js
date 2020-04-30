@@ -6,6 +6,7 @@ import ProductDetail from './Product/Detail'
 import DiscountTemp from './Discount'
 import CommentsPlugin from './Comments/Plugin'
 import Back from './Back'
+import WeappContact from './WeappContact'
 
 import ProductInfoPintuanJoin from './Product/Info/components/PinTuan/components/Join.vue'
 import ProductInfoPinDetail from './Product/Info/components/PinTuan/components/PinDetail.vue'
@@ -33,5 +34,6 @@ export default {
   PostComment,
   BlogComment,
   ProductRecommend,
-  Back
+  Back,
+  WeappContact
 }

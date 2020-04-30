@@ -4,44 +4,40 @@
     <div class="gallery-breadcrumbs">
       <tu-breadcrumbs first="所有图集" firstLink="/gallery"></tu-breadcrumbs>
     </div>
-    <tu-mob-back title="所有图集" class="mob-back"></tu-mob-back>
     <tu-loading v-if="galleryLoading" :isLoading="galleryLoading" text="加载中..."></tu-loading>
     <div v-else class="gallery-con">
       <div class="gallery-btn">
-        <span class="gallery-btn-item gallery-btn-two" :class="{'active': !config.style}" @click="fnSelect(0)">全部</span>
+        <span class="gallery-btn-item gallery-btn-two" :class="{'active': !config.style}" @click="fnSelect(0)">所有图集</span>
         <span class="gallery-btn-item" :class="{'active': config.style === 1}" @click="fnSelect(1)">图片轮播</span>
         <span class="gallery-btn-item" :class="{'active': config.style === 2}" @click="fnSelect(2)">多图展示</span>
-        <!-- <span class="gallery-btn-item gallery-btn-two" :class="{'active': config.style === 3}" @click="fnSelect(3)">杂志</span> -->
       </div>
       <template v-if="imagePosts.length">
         <div class="post-outer" v-for="item in imagePosts" :key="item.id">
           <template v-if="item.style === 1 && item.show">
             <!-- 图片轮播 -->
-            <gallery-slide-item :images="item.images" :id="item.id" :cover="item.cover"></gallery-slide-item>
-            <gallery-info :info="item" :is-show-comment = isShowComment></gallery-info>
+            <gallery-slide-item :images="item.images" :gallery="item" :is-show-comment="isShowComment" :id="item.id" :cover="item.cover" @open="FnOpen(arguments)"></gallery-slide-item>
+            <gallery-info :info="item" :is-show-comment = isShowComment @open="FnOpen(arguments)"></gallery-info>
           </template>
           <template v-if="item.style === 2 && item.show">
             <!-- 多图展示 -->
             <div class="multi">
-              <router-link class="multi-title" :to="`/gallery/${item.id}`">
+              <span class="multi-title" @click="FnOpen([item, 0])">
                 {{item.title}}
-              </router-link>
+              </span>
               <ul class="multi-inner">
                 <li class="multi-item"
                 v-for="(image, index) in item.images.slice(0,6)"
                 :key="index"
-                @click.stop="fnCircle(item.id)"
+                @click.stop="FnOpen([item, index])"
                 :style="{backgroundImage:`url(${image.src})`}"
                 >
-                  <!-- <img :src="image.src" alt="" class="multi-item-img"> -->
                 </li>
               </ul>
             </div>
             <gallery-info :info="item" :is-show-comment = isShowComment></gallery-info>
           </template>
-          <template v-if="item.style === 3 && item.show">
-          </template>
         </div>
+        <GallerySlideMask v-if="slideMask" :gallery="activeItem" :mask-index="maskIndex" :is-show-comment="isShowComment" @close="FnClose"></GallerySlideMask>
       </template>
       <div class="empty" v-else>
         暂无图集
@@ -54,6 +50,7 @@
 <script>
 import GallerySlideItem from './components/GallerySlideItem'
 import GalleryInfo from './components/GalleryInfo'
+import GallerySlideMask from './components/GallerySlideMask'
 function getImagePosts ({ size, page, style }) {
   return window.fetch(`/api/v1/image-posts?style=${style}&size=${size}&page=${page}`, {
     credentials: 'include'
@@ -77,6 +74,9 @@ export default {
         page: 1
       },
       nWidth: document.documentElement.clientWidth || document.body.clientWidth,
+      slideMask: false,
+      activeItem: {},
+      maskIndex: 1,
       paging: {}
     }
   },
@@ -110,8 +110,13 @@ export default {
     fnSelect (value) {
       this.config.style = value
     },
-    fnCircle (id) {
-      this.$router.push(`/gallery/${id}`)
+    FnClose () {
+      this.slideMask = false
+    },
+    FnOpen (value) {
+      this.slideMask = true
+      this.activeItem = Array.from(value)[0]
+      this.maskIndex = Array.from(value)[1]
     },
     handlePage (index) {
       this.config.page = index
@@ -127,7 +132,8 @@ export default {
   },
   components: {
     GallerySlideItem,
-    GalleryInfo
+    GalleryInfo,
+    GallerySlideMask
   }
 }
 </script>
@@ -228,7 +234,8 @@ export default {
     padding-top: 0;
   }
   .gallery-breadcrumbs{
-    display: none;
+    padding: 20px 0 0 20px;
+    /* display: none; */
   }
   .gallery-con{
     background: #f5f5f5;
@@ -251,8 +258,10 @@ export default {
     margin-bottom: 0;
     padding: 0 30px;
     justify-content: flex-start;
-    border-bottom: 1px solid #eee;
-    background: #fff;
+    position: sticky;
+    top: 0;
+    background: #f5f5f5;
+    z-index: 2;
   }
   .gallery-btn-item{
     margin-right: 45px;

@@ -27,6 +27,7 @@
       <SkIcon class="s-icon" name="order_comments" />
       <span class="s-cont">
         <span class="s-label">待评价</span>
+        <span v-if="waitComment" class="s-tip">{{ waitComment }}</span>
       </span>
     </button>
     <!-- <button @click="fnTo('/account/orders#completed')" class="s-link">
@@ -68,6 +69,10 @@ export default {
       default: null
     },
     waitGet: {
+      type: Number,
+      default: null
+    },
+    waitComment: {
       type: Number,
       default: null
     }
@@ -129,16 +134,16 @@ export default {
 .s-tip {
   position: absolute;
   top: -43px;
-  right: -8px;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  border: 1.5px solid currentColor;
+  right: -9px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border: 1px solid currentColor;
   border-radius: 50%;
-  color: #f44;
-  background-color: #fff;
+  color: #fff;
+  background-color: #f44;
   font-size: 10px;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 @media screen and (max-width: 768px) {

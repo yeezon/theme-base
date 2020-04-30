@@ -10,6 +10,7 @@
       <div class="content">
         <topic-attion v-if="gallery.topic" :topic="gallery.topic" @favor="fnFavorTopic" @favor-out="fnFavorTopicOut"></topic-attion>
         <h4 class="title">{{gallery.title}}</h4>
+        <div class="desc">{{gallery.description}}</div>
         <div class="detail">
           <span class="date">{{gallery.created_at | date('yyyy.MM.dd')}}</span>
           <div class="alt">
@@ -390,11 +391,14 @@ export default {
   top: 20px;
 }
 .content{
-  width: 340px;
+  width: 320px;
   display: inline-block;
   vertical-align: top;
-  padding: 0px 25px 0 20px;
+  padding: 0px 35px 0 20px;
+  background: #fff;
   box-sizing: border-box;
+  margin-left: 20px;
+  box-shadow: inset 0px 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 .gallery-breadcrumbs{
   /* max-width: 1100px; */
@@ -408,6 +412,12 @@ export default {
   font-weight: bold;
   line-height: 1.5;
   margin: 18px 0 8px;
+}
+.desc{
+  font-size: 12px;
+  color: #3d3d3d;
+  line-height: 1.5;
+  margin: 0px 0 8px;
 }
 .detail{
   padding: 3px 0 12px;

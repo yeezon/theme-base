@@ -19,7 +19,7 @@
       <dt class="s-items"><sk-icon class="s-icon" name="account-services"></sk-icon><span class="s-title">服务中心</span></dt>
       <dd class="s-item"><router-link class="s-link" to="/account/services/orders"><sk-icon class="s-link_icon" name="account-services"></sk-icon><span class="s-link_text">售后管理</span></router-link></dd>
     </dl>
-    <div class="s-sign_out" @click="fnSignOut">退出当前账号</div>
+    <div class="s-sign_out" @click="fnSignOut">退出当前登录</div>
   </div>
 </template>
 

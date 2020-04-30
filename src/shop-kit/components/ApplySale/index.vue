@@ -1,8 +1,8 @@
 <template>
   <div class="sk-order-apply">
-    <a href="javascript:void(0)" class="s-apply-btn" @click="FnApply">申请售后</a>
-    <sale-due  v-if="isShowDue" :is-show-due="isShowDue" @close="FnChangeDue"></sale-due>
-    <apply-due v-if="isShowApply" :is-show-apply="isShowApply" :order="order" @close="FnChangeApply"></apply-due>
+    <a href="javascript:void(0)" class="s-apply-btn" @click="fnApply">申请售后</a>
+    <sale-due  v-if="isShowDue" :is-show-due="isShowDue" @close="fnChangeDue"></sale-due>
+    <apply-due v-if="isShowApply" :is-show-apply="isShowApply" :order="order" @close="fnChangeApply"></apply-due>
   </div>
 </template>
 
@@ -13,7 +13,10 @@ export default {
   name: 'SkApplySaleBtn',
   props: {
     order: {
-      type: Object
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   data () {
@@ -29,13 +32,24 @@ export default {
     // this.orderNo = this.order.order_no
   },
   methods: {
-    FnChangeDue () {
+    fnChangeDue () {
       this.isShowDue = false
     },
-    FnApply () {
-      this.isDue ? this.isShowDue = true : this.isShowApply = true
+    fnApply () {
+      const oOrder = this.order || {}
+
+      if (!oOrder.is_change_amount) {
+        this.isDue ? this.isShowDue = true : this.isShowApply = true
+      } else {
+        window.alert('当前订单被人工改价，请联系客服进行售后处理')
+
+        // this.$confirm({
+        //   title: '申请售后',
+        //   msg: '当前订单被人工改价，请联系客服进行售后处理'
+        // }).then(() => {}).catch(() => {}).finally(() => {})
+      }
     },
-    FnChangeApply () {
+    fnChangeApply () {
       this.isShowApply = false
     }
   },

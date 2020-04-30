@@ -29,11 +29,11 @@ export default {
     },
     type: {
       type: String,
-      default: 'CNY' // 根据 $shop.currency
+      default: (window.$$shop || {}).currency || 'CNY' // 根据 $shop.currency
     },
     symbol: {
       type: String,
-      default: '￥' // 根据 $shop.currency_symbol
+      default: (window.$$shop || {}).currency_symbol || '￥' // 根据 $shop.currency_symbol
     },
     decimal: {
       type: Number,
@@ -51,6 +51,7 @@ export default {
   .su-currency {
     display: inline-block;
     text-decoration: inherit;
+    white-space: nowrap;
   }
   .su-currency > span {
     display: inline-block;

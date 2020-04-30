@@ -177,12 +177,12 @@ export default {
       }
     },
     getPayTypeClass (payType) {
-      const _match = payType.match(/(card|wppay|alipay|tenpay|kuaipay|baifubao)/i)
+      const _match = payType.match(/(card|wppay|alipay|tenpay|kuaipay|baifubao|paypal|stripe)/i)
 
       if (_match) {
         payType = _match[0]
       } else {
-        payType = ''
+        payType = 'card' // 默认是 Card
       }
 
       return payType
@@ -349,6 +349,12 @@ export default {
 }
 .s-icon-baifubao {
   color: #f31410;
+}
+.s-icon-paypal {
+  color: #009CDE;
+}
+.s-icon-stripe {
+  color: #093353;
 }
 .s-icon-card {
   color: #edb445;

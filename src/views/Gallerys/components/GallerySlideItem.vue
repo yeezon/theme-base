@@ -31,8 +31,8 @@
           v-for="(item, index) in newImages"
           :key="index"
           :style="{backgroundImage:`url(${item.src})`}"
+          @click.native="fnMobOpen(index)"
           >
-          <!-- <img :src="item.src" :alt="item.alt" class="swiper-circle-mob"> -->
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
@@ -48,6 +48,10 @@ export default {
     images: {
       type: Array,
       default: () => []
+    },
+    gallery: {
+      type: Object,
+      default: () => {}
     },
     cover: {
       type: Object,
@@ -124,6 +128,9 @@ export default {
     fnLink () {
       this.$router.push(`/gallery/${this.id}`)
     },
+    fnMobOpen (index) {
+      this.$emit('open', this.gallery, index)
+    },
     callback () {
     }
   },
@@ -195,6 +202,17 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.gallery-mob /deep/ .swiper-pagination-fraction{
+  width: auto;
+  right: 20px;
+  left: auto;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 11px;
+  line-height: 20px;
+  background:  rgba(0, 0, 0, .5);
+}
 @media screen and (max-width:768px){
   .gallery-pc{
     display: none;
@@ -206,16 +224,6 @@ export default {
     display: block;
     width: 100%;
   }
-  .gallery-mob /deep/ .swiper-pagination-fraction{
-    width: auto;
-    right: 20px;
-    left: auto;
-    color: #fff;
-    border-radius: 10px;
-    padding: 0 10px;
-    font-size: 11px;
-    line-height: 20px;
-    background:  rgba(0, 0, 0, .5);
-  }
+
 }
 </style>

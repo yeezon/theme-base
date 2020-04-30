@@ -2,7 +2,7 @@
   <ul class="pagination" v-if="total" @click="handleClickPage">
     <li class="prev">
       <su-button class="icon" :disabled="page === 1">
-        <svg-icon name="home-catlog-prev" class="icon-prev"></svg-icon>
+        <svg-icon name="home-arrow-left" class="icon-prev"></svg-icon>
       </su-button>
     </li>
     <li :class="{active: page === 1}" v-if="total > 0" class="number">1</li>
@@ -17,7 +17,7 @@
     <li :class="{active: page === total}" v-if="total > 1" class="number">{{ total }}</li>
     <li class="next">
       <su-button class="icon" :disabled="page === total">
-        <svg-icon name="home-catlog-next" class="icon-next"></svg-icon>
+        <svg-icon name="home-arrow-right" class="icon-next"></svg-icon>
       </su-button>
     </li>
   </ul>
@@ -43,13 +43,10 @@ export default {
       nWidth: document.documentElement.clientWidth || document.body.clientWidth
     }
   },
-  created () {
-    // this.scrollPage()
-  },
   computed: {
     pagers: {
       get: function () {
-        const max = 7
+        const max = this.nWidth > 768 ? 7 : 3
         const halfTotal = (max - 1) / 2
 
         const currentPage = Number(this.page)
@@ -84,12 +81,14 @@ export default {
             array.push(i)
           }
         }
-        // this.ellPrevShow = _ellPrevShow
-        // this.ellNextShow = _ellNextShow
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.ellPrevShow = _ellPrevShow
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.ellNextShow = _ellNextShow
         return array
       },
       set: function () {
-        const max = 7
+        const max = this.nWidth > 768 ? 7 : 3
         const halfTotal = (max - 1) / 2
 
         const currentPage = Number(this.page)
@@ -159,18 +158,6 @@ export default {
         this.$emit('change', newPage)
         document.documentElement.scrollTop = document.body.scrollTop = 0
       }
-    },
-    scrollPage () {
-      if (this.nWidth <= 768) {
-        window.addEventListener('scroll', () => {
-          if (document.documentElement.scrollHeight - document.documentElement.clientHeight - document.documentElement.scrollTop < 50) {
-            if (this.page >= this.total) {
-              return
-            }
-            this.$emit('change-scroll', this.page + 1)
-          }
-        })
-      }
     }
   }
 }
@@ -182,57 +169,58 @@ export default {
   line-height: 40px;
   padding: 0;
   margin: 30px 0 0;
+  padding-bottom: 30px;
   text-align: center;
   list-style: none;
 }
 
 .number {
   display: inline-block;
-  height: 35px;
-  line-height: 35px;
-  width: 35px;
-  margin-left: 5px;
-  margin-right: 5px;
+  height: 40px;
+  line-height: 40px;
+  width: 40px;
+  margin-left: 4px;
+  margin-right: 4px;
   text-align: center;
-  border:1px solid #ececec;
-  background: #fff;
+  border:1px solid #ddd;
   cursor: pointer;
   color: #666;
+  background: #f5f5f5;
+  border-radius: 2px;
   padding: 0;
   box-sizing: border-box;
+  vertical-align: top;
   transition: all .3s ease;
 }
 .icon{
   display: inline-block;
-  width: 35px;
-  height: 35px;
-  line-height: 35px;
-  /* cursor: pointer; */
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
   padding: 0;
-  border: none;
-  background: transparent;
+  border-radius: 2px;
+  border:1px solid #ddd;
+  background: #f5f5f5;
+  box-sizing: border-box;
+  font-size: 22px;
+  color: #666;
 }
 .next,.prev{
   display: inline-block;
+  height: 40px;
 }
-.icon:hover{
-  background: transparent;
-}
-.number:hover{
-  /* border: 1px solid var(--main_color); */
-  /* color: var(--main_color); */
-  border: 1px solid #0f57db;
-  color: #0f57db;
+.icon:hover,.number:hover{
+  border: 1px solid #333;
+  color: #333;
 }
 .number.active{
-  /* border: 1px solid var(--main_color); */
-  /* color: var(--main_color); */
-  border: 1px solid #0f57db;
-  color: #0f57db;
+  border: none;
+  color: #222;
+  background: transparent;
 }
-@media screen and (max-width:768px) {
-  .pagination{
-    /* display: none; */
-  }
+.icon.su-button.is-disabled{
+  background-color: #fff !important;
+  border-color: #ddd !important;
+  color: #b5b5b5 !important;
 }
 </style>

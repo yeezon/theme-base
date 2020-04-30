@@ -1,12 +1,12 @@
 <template>
   <div class="breadcrumbs">
-    <router-link to="/" class="home">首页</router-link>
+    <router-link to="/" class="home hover">首页</router-link>
     <sk-icon name="arrow_down" class="arrow-right">></sk-icon>
     <template v-if="!second">
       <span class="">{{first}}</span>
     </template>
     <template v-else>
-      <router-link :to="firstLink" :class="{'first-link':second}">{{first}}</router-link>
+      <router-link :to="firstLink" :class="{'first-link':second}" class="hover">{{first}}</router-link>
       <sk-icon name="arrow_down" v-if="second" class="arrow-right">></sk-icon>
       <span class="">{{second}}</span>
     </template>
@@ -48,20 +48,29 @@ export default {
   text-overflow: ellipsis;
 }
 .breadcrumbs a {
-  color: #333;
+  color: #000;
 }
 .breadcrumbs .home{
-  color: #0f57db;
-  /* color: var(--main_color); */
+  color: #aaa;
 }
 .breadcrumbs .first-link{
-  color: #0f57db;
-  /* color: var(--main_color); */
+  color: #aaa;
 }
-
 .arrow-right {
   width: 16px;
   height: 16px;
   margin: 0 3px;
+}
+.hover{
+  position: relative;
+}
+.hover:hover:after{
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #aaa
 }
 </style>

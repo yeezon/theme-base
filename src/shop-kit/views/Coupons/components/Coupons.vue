@@ -18,7 +18,8 @@
               <div>
                 <span v-if="coupon.utype === 'percentage'">{{coupon.discount_percentage / 10}}折</span>
                 <su-currency v-else :val="coupon.discount_amount" :zero="false"></su-currency>
-                <small v-if="coupon.active_amount === 0">无使用门槛</small>
+                <small v-if="hasLimit(coupon)">无使用门槛</small>
+                <small v-else-if="getLimitDesc(coupon)">{{ getLimitDesc(coupon) }}</small>
                 <small v-else>
                   <span>满</span>
                   <su-currency :val="coupon.active_amount" :zero="false"></su-currency>
@@ -30,7 +31,8 @@
             </td>
             <td class="s-coupon-name">{{coupon.coupon_group_name}}</td>
             <td class="s-coupon-rules">
-              <span v-if="coupon.active_amount === 0">无使用门槛</span>
+              <span v-if="hasLimit(coupon)">无使用门槛</span>
+              <span v-else-if="getLimitDesc(coupon)">{{ getLimitDesc(coupon) }}</span>
               <span v-else>
                 满
                 <su-currency :val="coupon.active_amount" :zero="false"></su-currency>
@@ -86,7 +88,8 @@
                   <su-currency v-else :val="coupon.discount_amount" :zero="false"></su-currency>
                 </span>
                 <br>
-                <span v-if="coupon.active_amount === 0" class="s-m-coupon-ticket-desc">无使用门槛</span>
+                <span v-if="hasLimit(coupon)" class="s-m-coupon-ticket-desc">无使用门槛</span>
+                <span v-else-if="getLimitDesc(coupon)" class="s-m-coupon-ticket-desc">{{ getLimitDesc(coupon) }}</span>
                 <span v-else class="s-m-coupon-ticket-desc">
                   <span>满</span>
                   <su-currency :val="coupon.active_amount" :zero="false"></su-currency>
@@ -98,7 +101,8 @@
             </div>
             <div class="s-m-coupon-each-detail">
               <p class="s-m-coupon-each-detail-bold">
-                <span v-if="coupon.active_amount === 0" class="s-m-coupon-ticket-desc">无使用门槛</span>
+                <span v-if="hasLimit(coupon)" class="s-m-coupon-ticket-desc">无使用门槛</span>
+                <span v-else-if="getLimitDesc(coupon)" class="s-m-coupon-ticket-desc">{{ getLimitDesc(coupon) }}</span>
                 <span v-else class="s-m-coupon-ticket-desc">
                   <span>满</span>
                   <su-currency :val="coupon.active_amount" :zero="false"></su-currency>
@@ -125,7 +129,8 @@
     </div>
 
     <!--  -->
-    <su-dialog :open="dialogShow" :title=" type === 'partial_include' ? '优惠券适用商品列表' : '优惠劵仅适用指定的商品'" @close="dialogShow = false">
+    <su-dialog :open="dialogShow" title="优惠券适用于以下商品" @close="dialogShow = false">
+      <div class="s-dialog-desc">使用规则：{{ type === 'partial_include' ? '订单中含有以下商品' : '订单中仅有以下商品' }}</div>
       <div class="s-dialog-con">
         <div v-if="nProducts.length">
           <div class="s-dialog-pro-item" v-for="(pro, index) in nProducts" :key="index">
@@ -168,8 +173,34 @@ export default {
       type: ''// 是包含商品还是指定商品的优惠券
     }
   },
-  created () {},
   methods: {
+    hasLimit (oCoupon) {
+      let isLimit = true
+
+      if (oCoupon.active_amount > 0) {
+        isLimit = false
+      }
+
+      if (/^(partial|partial_include)$/ig.test(oCoupon.rtype)) {
+        isLimit = false
+      }
+
+      return isLimit
+    },
+    getLimitDesc (oCoupon) {
+      let desc = ''
+
+      if (/^(partial|partial_include)$/ig.test(oCoupon.rtype)) {
+        desc = '商品券'
+      }
+
+      // 商品券也可能有金额门槛
+      if (oCoupon.active_amount > 0) {
+        desc = ''
+      }
+
+      return desc
+    },
     getProducts (products) {
       this.type = products.rtype
       const oProducts = products.products_name
@@ -500,10 +531,17 @@ export default {
 
   /* 商品列表dialog */
 
+  .s-dialog-desc {
+    margin: -5px 0 15px;
+    padding: 0;
+    font-size: 12px;
+    color: #999;
+  }
+
   .s-dialog-con {
     width: 500px;
     max-width: 100%;
-    max-height: 600px;
+    max-height: 500px;
     overflow: auto;
   }
 
@@ -576,7 +614,7 @@ export default {
     }
 
     .s-dialog-con {
-      max-height: calc(100vh - 150px);
+      max-height: calc(100vh - 200px);
       -webkit-overflow-scrolling: touch;
     }
 

@@ -4,7 +4,7 @@
       <div class="votes-breadcrumbs">
         <tu-breadcrumbs first-link="/votes" first="所有投票"></tu-breadcrumbs>
       </div>
-      <tu-mob-back title="所有投票"></tu-mob-back>
+      <!-- <div class="mob-back">所有投票</div> -->
       <tu-loading v-if="voteLoading" :isLoading="voteLoading" text="加载中..."></tu-loading>
       <template v-else>
         <ul class="votes-con" v-if="votes.length">
@@ -187,15 +187,19 @@ export default {
   width: 680px;
 }
 .votes-con{
-  padding: 0 30px;
-  background-color: rgb(255, 255, 255);
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  /* background-color: rgb(255, 255, 255); */
+  /* box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1); */
   margin: 0;
   list-style: none;
 }
 .vote-item{
-  padding: 0 0 30px;
-  border-bottom: 1px solid #ddd;
+  padding: 0 30px 30px;
+  /* border-bottom: 1px solid #ddd; */
+  border-radius: 4px;
+  margin-bottom: 18PX;
+  background: #fff;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);;
 }
 .item-title{
   padding: 26px 0;
@@ -230,6 +234,9 @@ export default {
   text-align: center;
   color: #777;
 }
+.mob-back{
+  display: none;
+}
 @media screen and (max-width:768px){
   .votes-inner{
     width: 100%;
@@ -239,11 +246,12 @@ export default {
     padding-top: 0;
   }
   .votes-breadcrumbs{
-    display: none;
+    padding: 20px 0 0 20px;
+    /* display: none; */
   }
   .votes-con{
     background: #f5f5f5;
-    margin: 12px 16px;
+    margin: 0 16px 12px;
     padding: 0;
     border-radius: 4px;
   }
@@ -259,8 +267,12 @@ export default {
     margin: 0 0 12px;
     font-weight: 500;
   }
-  .mob-back >>> svg{
-    display: none;
+  .mob-back{
+    display: block;
+    font-size: 18px;
+    color: #000;
+    background: #f5f5f5;
+    padding: 18px 16px;
   }
 }
 </style>

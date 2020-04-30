@@ -2,12 +2,12 @@
   <div class="vote">
     <tu-loading v-if="voteLoading" :isLoading="voteLoading" text="加载中..."></tu-loading>
     <template v-else>
+      <div class="vote-breadcrumbs">
+        <tu-breadcrumbs first-link="/votes" first="投票列表" :second="vote.title"></tu-breadcrumbs>
+      </div>
       <div v-if="(vote.image || {}).src" class="banner">
         <!-- 推荐尺寸1850*400 -->
-        <!-- <img :src="'//asset.ibanquan.com/image/5d418f681dfc7f000b0bc219/s.png?v=1564577640' || vote.image.src" alt=""> -->
         <div class="banner-inner" :style="{backgroundImage:`url(${(vote.image || {}).src})`}">
-          <!-- <img :src="vote.image.src" :alt="vote.image.alt"> -->
-          <span @click="fnBack" class="back"><svg-icon name="topic-back"></svg-icon></span>
         </div>
       </div>
       <div class="vote-con">
@@ -324,6 +324,9 @@ export default {
   top: 0;
   margin: auto;
 }
+.vote-breadcrumbs{
+  padding-top: 40px;
+}
 .vote-con{
   width: 1100px;
   max-width: 100%;
@@ -348,8 +351,9 @@ export default {
   display: none;
 }
 .vote-con-inner /deep/ .select-item{
-  line-height: 25px;
+  line-height: 32px;
   margin-bottom: 20px;
+  background: #fff;
 }
 .vote-con-inner /deep/ .item-progress{
   height: 25px;
@@ -357,6 +361,9 @@ export default {
 @media screen and (max-width:768px){
   .vote{
 
+  }
+  .vote-breadcrumbs{
+    padding: 20px 20px 0 20px;
   }
   .back{
     display:block;

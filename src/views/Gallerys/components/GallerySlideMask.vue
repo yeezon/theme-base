@@ -1,14 +1,17 @@
 <template>
-  <div class="gallery-mob">
-    <swiper :options="swiperOption" ref="gallery" class="gallery-mob-swiper">
-      <swiper-slide class="swiper-slide" v-for="(item, index) in gallery.images" :key="index" :style="{backgroundImage:`url(${item.src})`}">
+  <div class="gallery-mob-mask">
+    <span class="gallery-close" @click="FnClose">
+      <svg-icon name="gallery-close"></svg-icon>
+    </span>
+    <swiper :options="swiperOptionMask" ref="gallerymask" class="gallery-mob-swiper">
+      <swiper-slide class="swiper-slide" v-for="(item, index) in gallery.images" :key="index" :style="{backgroundImage:`url(${item.src})`}" @click.native="FnClose">
       </swiper-slide>
     </swiper>
     <div class="swiper-other">
       <div class="swiper-pagination-mask" slot="pagination"></div>
       <div class="img-desc"
-        v-if="(gallery.images[activeIndex - 1] || {}).alt"
-        >{{(gallery.images[activeIndex - 1] || {}).alt || ''}}</div>
+        v-if="(gallery.images[activeMaskIndex - 1] || {}).alt"
+        >{{(gallery.images[activeMaskIndex - 1] || {}).alt || ''}}</div>
       <div class="gallery-info-mob gallery-info-multi-mob">
       <div class="mob-icon-inner">
         <span class="mob-icon" v-if="!gallery.is_favor" @click="fnFavor(gallery)">
@@ -23,14 +26,12 @@
           <svg-icon name="gallery-mob-comment" class="svg-comment"></svg-icon>
           <span class="tips" :class="gallery.comment_count > 9 ? 'diget-comment' : 'unit-comment'" v-if="gallery.comment_count">{{gallery.comment_count}}</span>
         </span>
-        <!-- <span class="mob-icon">
-          <svg-icon name="gallery-mob-share" class="svg-share"></svg-icon>
-        </span> -->
       </div>
     </div>
     </div>
   </div>
 </template>
+
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
@@ -41,6 +42,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    maskIndex: {
+      type: Number,
+      default: 1
+    },
     isShowComment: {
       type: Boolean,
       default: false
@@ -49,33 +54,40 @@ export default {
   data () {
     const self = this
     return {
-      swiperOption: {
+      swiperOptionMask: {
         pagination: {
           el: '.swiper-pagination-mask',
           type: 'fraction'
         },
+        initialSlide: self.maskIndex,
         loop: true,
         on: {
           slideChange () {
-            self.activeIndex = (self.swiper || {}).activeIndex || 1
-            if (self.activeIndex > self.gallery.images.length) {
-              self.activeIndex = 1
+            self.activeMaskIndex = (self.swiper || {}).activeMaskIndex || 1
+            if (self.activeMaskIndex > self.gallery.images.length) {
+              self.activeMaskIndex = 1
             }
           }
         }
       },
-      activeIndex: 1
+      activeMaskIndex: 1
     }
   },
   computed: {
     swiper () {
-      return this.$refs.gallery.swiper
+      return this.$refs.gallerymask.swiper
     }
   },
   mixins: [galleryFavor],
+  mounted () {
+    // this.swiper.slideTo(this.maskIndex + 1, 1000, false)
+  },
   methods: {
     fnLink () {
       this.$router.push(`/gallery/${this.gallery.id}/comment`)
+    },
+    FnClose () {
+      this.$emit('close')
     }
   },
   components: {
@@ -84,8 +96,9 @@ export default {
   }
 }
 </script>
-<style  scoped>
-.gallery-mob{
+
+<style scoped>
+.gallery-mob-mask{
   position: fixed;
   height: 100vh;
   left: 0;
@@ -114,7 +127,7 @@ export default {
   padding: 0 16px;
   box-sizing: border-box;
 }
-.gallery-mob /deep/ .swiper-pagination-mask{
+.gallery-mob-mask /deep/ .swiper-pagination-mask{
   position: relative;
   left: initial;
   bottom: initial;
@@ -176,19 +189,10 @@ export default {
 .tips.diget-favor{
   left: 10px;
 }
-@media screen and (max-width:768px){
-  .gallery-mob-swiper{
-    position: relative;
-    height: 100vh;
-  }
-  .mob-back{
-    position: relative;
-    background: #fff;
-  }
-  .mob-back /deep/ .icon-back{
-    position: absolute;
-    left: 15px;
-    top: 15px;
-  }
+.gallery-close{
+  position: absolute;
+  z-index: 121;
+  right: 22px;
+  top: 22px;
 }
 </style>

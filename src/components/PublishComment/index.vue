@@ -169,14 +169,4 @@ export default {
     text-align: center;
   }
 }
-@media screen and (max-width:768px){
-  /* 修复 */
-  .input-mob{
-    display: flex;
-    width: 100%;
-    left: -16px;
-    position: relative;
-    border-top: none;
-  }
-}
 </style>

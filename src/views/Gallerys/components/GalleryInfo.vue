@@ -12,7 +12,7 @@
           {{info.favor_count}}
         </span>
         <router-link class="comment" v-if="isShowComment" :to="`gallery/${info.id}`">
-          <svg-icon name="common-comment-active" class="icon"></svg-icon>
+          <svg-icon name="post-comment" class="icon"></svg-icon>
           {{info.comment_count}}
         </router-link>
       </div>
@@ -26,53 +26,55 @@
       </div> -->
     </div>
     <div class="gallery-info-mob" v-if="info.style === 1">
+      <span class="mob-info" @click="FnOpen()">
+        {{info.title}}
+      </span>
+      <div class="mob-comments" v-if="(info.comments || {}).length && isShowComment">
+        <div class="mob-comments-inner" v-for="(item, index) in info.comments" :key="index">
+          <span class="mob-name">{{item.customer.name}}:</span>
+          <span class="mob-comment">{{item.content}}</span>
+        </div>
+        <div class="mob-comments-num" @click="fnComment">
+          共{{info.comment_count}}条评论 >
+        </div>
+      </div>
       <div class="mob-icon-inner">
+        <span class="date">{{info.created_at | date('yyyy.MM.dd')}}</span>
         <span class="mob-icon special" v-if="!info.is_favor" @click="fnFavor(info)">
-          <svg-icon name="imagesposts-mob-favor"></svg-icon>
+          <svg-icon name="common-favor"></svg-icon>
+          <div class="num">{{info.favor_count}}</div>
         </span>
         <span class="mob-icon special active" v-else @click="fnFavorOut(info)">
           <svg-icon name="common-favor-active"></svg-icon>
+          <div class="num">{{info.favor_count}}</div>
         </span>
-        <span class="mob-icon" @click="fnLink">
-          <svg-icon name="imagesposts-mob-comment"></svg-icon>
+        <span class="mob-icon" @click="fnComment" v-if="isShowComment">
+          <svg-icon name="post-comment"></svg-icon>
+          <div class="num">{{info.comment_count}}</div>
         </span>
         <!-- <span class="mob-icon" @click="fnShare">
           <svg-icon name="imagesposts-mob-share"></svg-icon>
         </span> -->
       </div>
-      <div class="num">
-        {{info.favor_count}}人喜欢
-      </div>
-      <router-link class="mob-info" :to="`/gallery/${info.id}`">
-        {{info.title}}
-      </router-link>
-      <div class="mob-comments" v-if="info.comments.length">
-        <div class="mob-comments-inner" v-for="(item, index) in info.comments" :key="index">
-          <span class="mob-name">{{item.customer.name}}:</span>
-          <span class="mob-comment">{{item.content}}</span>
-        </div>
-        <div class="mob-comments-num" @click="fnLink">
-          共{{info.comment_count}}条评论 >
-        </div>
-      </div>
     </div>
     <div class="gallery-info-mob gallery-info-multi-mob" v-else-if="info.style === 2">
       <div class="mob-icon-inner mob-icon-end">
+        <span class="date">{{info.created_at | date('yyyy.MM.dd')}}</span>
         <span class="mob-icon special" v-if="!info.is_favor" @click="fnFavor(info)">
-          <svg-icon name="imagesposts-mob-favor"></svg-icon>
-          <span class="tips" :class="info.favor_count > 9 ? 'diget-favor' : 'unit-favor'" v-if="info.favor_count">{{info.favor_count}}</span>
+          <svg-icon name="common-favor"></svg-icon>
+          <div class="num">{{info.favor_count}}</div>
         </span>
         <span class="mob-icon special active" v-else @click="fnFavorOut(info)">
           <svg-icon name="common-favor-active"></svg-icon>
-          <span class="tips" :class="info.favor_count > 9 ? 'diget-favor' : 'unit-favor'" v-if="info.favor_count">{{info.favor_count}}123</span>
+          <div class="num">{{info.favor_count}}</div>
         </span>
-        <span class="mob-icon" @click="fnLink">
-          <svg-icon name="imagesposts-mob-comment"></svg-icon>
-          <span class="tips" :class="info.comment_count > 9 ? 'diget-comment' : 'unit-comment'" v-if="info.comment_count">{{info.comment_count}}</span>
+        <span class="mob-icon" @click="fnComment" v-if="isShowComment">
+          <svg-icon name="post-comment"></svg-icon>
+          <div class="num">{{info.comment_count}}</div>
         </span>
-        <span class="mob-icon icon-share" @click="fnShare">
+        <!-- <span class="mob-icon icon-share" @click="fnShare">
           <svg-icon name="imagesposts-mob-share"></svg-icon>
-        </span>
+        </span> -->
       </div>
     </div>
     <tu-mob-share
@@ -145,11 +147,14 @@ export default {
         console.log('取消收藏失败')
       })
     },
-    fnLink () {
+    fnComment () {
       this.$router.push(`/gallery/${this.info.id}/comment`)
     },
     fnShare () {
       this.onShare = true
+    },
+    FnOpen () {
+      this.$emit('open', this.info, 0)
     }
   }
 }
@@ -218,34 +223,38 @@ export default {
   }
   .gallery-info-mob{
     display: block;
-    padding: 15px 16px 30px;
+    padding: 15px 16px 19px;
   }
   .mob-icon-inner{
     display: flex;
     align-items: center;
     font-size: 0;
+    justify-content: flex-end;
   }
   .mob-icon{
-    margin-right: 28px;
+    margin-left: 14px;
     position: relative;
-    color: #565454;
+    color: rgb(211, 211, 211);
+    display: flex;
+    align-items: center;
   }
   .mob-icon svg{
-    font-size: 18px;
+    font-size: 14px;
   }
-  .mob-icon.special svg{
-    font-size: 20px;
+  .mob-icon.special{
+    margin-left: 0;
   }
   .num{
-    font-size: 13px;
-    color: #333;
-    margin: 13px 0 18px;
-    font-weight: bold;
+    font-size: 14px;
+    color: #999;
+    padding-left: 5px;
+    line-height: 1;
   }
   .mob-comments{
     background: #f4f4f4;
     padding: 12px;
     border-radius: 4px;
+    margin-bottom: 15px;
   }
   .mob-comments-inner{
     font-size: 12px;
@@ -300,11 +309,18 @@ export default {
   .tips.diget-comment{
     left: 0;
   }
-   .tips.unit-favor{
+  .tips.unit-favor{
     left: 8px;
   }
   .tips.diget-favor{
     left: 4px;
+  }
+  .date{
+    font-size: 12px;
+    background: transparent;
+    color: #999;
+    margin-right: auto;
+    padding: 0;
   }
 }
 </style>

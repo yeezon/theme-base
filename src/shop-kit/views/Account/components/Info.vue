@@ -4,20 +4,20 @@
 
 <template>
 <div class="account-info" data-com="AccountInfo" @click="fnTo('/account/personal')">
-  <div class="s-lite">
+  <router-link to="/account/personal" class="s-lite">
     <div class="s-avatar"><img v-show="oCustomer.avatar_url" class="s-img" :src="oCustomer.avatar_url"></div>
     <dir class="s-infos">
       <div class="s-name">{{ oCustomer.name }}</div>
       <div class="s-credit"><SkIcon class="s-icon" name="point" /><span>经验值：{{ oCustomer.total_credit }}</span></div>
     </dir>
-  </div>
+  </router-link>
   <div class="s-items">
     <div class="s-item">积分：{{ oCustomer.point }}</div>
     <div class="s-item">经验值：{{ oCustomer.total_credit }}</div>
     <div class="s-item">会员等级：{{ (oCustomer.customer_level || {}).name }}</div>
   </div>
   <div class="s-sign_out">
-    <su-button size="small" @click="fnSignOut">退出账号</su-button>
+    <su-button size="small" @click="fnSignOut">退出登录</su-button>
   </div>
 </div>
 </template>

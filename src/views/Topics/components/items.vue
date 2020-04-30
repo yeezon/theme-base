@@ -6,7 +6,6 @@
         class="item-link"
         :style="{ backgroundImage: `url(${ (item.image || {}).src })` }"
         >
-        <!-- <img :src="item.image.src" alt=""> -->
         <div class="item-inner">
           <h5 class="name">{{item.name || '没写名字'}}</h5>
           <span class="introduce">{{item.introduce || '没写介绍'}}</span>
@@ -138,12 +137,13 @@ export default {
     margin-bottom: 10px;
   }
   .item-link{
-    border-radius: 4px;
+    border-radius: 4px 4px 0 0;
   }
   .content{
     border-radius: 0 0 4px 4px;
-    background: #f5f5f5;
-    padding: 0;
+    background: #fff;
+    box-shadow:0px 6px 12px 0px rgba(0, 0, 0, 0.05);
+    padding: 0 20px;
   }
   .item-link img{
     /* position: inherit; */
