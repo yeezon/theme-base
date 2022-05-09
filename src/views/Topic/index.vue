@@ -33,7 +33,7 @@
       <div class="pc-topic-title">文章<span class="pc-topic-num">{{topic.contains_count}}</span></div>
       <div class="topic-conent">
         <div class="mob-block"></div>
-        <div class="topic-item" :class="{'first':index === 0, 'gallery': item.type === 4}" v-for="(item, index) in topic.contents" :key="index">
+        <div class="topic-item" :class="{'first':index === 0, 'gallery': item.type === 4}" v-for="(item, index) in list" :key="index">
           <tu-post-item
             v-if="item.type === 2"
             :post="item.value"
@@ -67,7 +67,10 @@
             </template>
           </template>
         </div>
+
         <GallerySlideMask v-if="slideMask" :gallery="activeItem" :mask-index="maskIndex" :is-show-comment="isShowComment" @close="FnClose"></GallerySlideMask>
+
+        <tu-paginate-lite v-if="list.length" :total="Math.ceil(topic.contains_count / query.size)" :page="query.page" @change="handlePage"></tu-paginate-lite>
       </div>
     </template>
   </div>
@@ -79,13 +82,13 @@ import { back, judgesign } from '@/mixins'
 import GallerySlideItem from '../Gallerys/components/GallerySlideItem'
 import GalleryInfo from '../Gallerys//components/GalleryInfo'
 import GallerySlideMask from '../Gallerys/components/GallerySlideMask'
-function getTopic (id) {
-  return window.fetch(`/api/v1/topics/show?id=${id}`, {
+function getTopic (obj) {
+  return window.fetch(`/api/v1/topics/show?id=${obj.id}&page=${obj.page}&size=${obj.size}`, {
     credentials: 'include'
   })
 }
 function getSetting () {
-  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+  return window.fetch('/api/v1/image-posts/comments/setting', {
     credentials: 'include'
   })
 }
@@ -98,7 +101,13 @@ export default {
       slideMask: false,
       maskIndex: 1,
       activeItem: {},
-      topic: {}
+      topic: {},
+      query: {
+        page: 1,
+        size: 10,
+        hasMore: true
+      },
+      list: []
     }
   },
   mixins: [back, judgesign],
@@ -108,27 +117,41 @@ export default {
   },
   methods: {
     init () {
-      getTopic(this.id).then(oRes => {
+      this.getList()
+      getSetting().then(oRes => {
+        return oRes.json()
+      }).then(res => {
+        if (res.code === 200) {
+          const _data = res.msg.results
+          this.isShowComment = _data.enable_option
+        }
+      })
+    },
+    getList () {
+      const query = { ...this.query }
+      query.id = this.id
+      getTopic(query).then(oRes => {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
           this.topicLoading = false
           this.topic = res.msg.results
-        }
-      })
-      getSetting().then(oRes => {
-        return oRes.json()
-      }).then(res => {
-        if (res.code === 200) {
-          let _data = res.msg.results
-          this.isShowComment = _data.enable_option
+          const list = res.msg.results.contents || []
+          this.list = list
+
+          this.query.hasMore = list.length === query.size
         }
       })
     },
+    handlePage (num) {
+      // console.log(num)
+      this.query.page = num
+      this.getList()
+    },
     fnFavor (item) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/topics/favorites`, {
+      const _this = this
+      window.fetch('/api/v1/topics/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -169,8 +192,8 @@ export default {
       })
     },
     fnFavorItem (item) {
-      let _this = this
-      window.fetch(`/api/v1/post/favorites`, {
+      const _this = this
+      window.fetch('/api/v1/post/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -216,7 +239,7 @@ export default {
       this.maskIndex = Array.from(value)[1]
     },
     FnBack () {
-      this.$router.push(`/topics`)
+      this.$router.push('/topics')
     },
     FnClose () {
       this.slideMask = false

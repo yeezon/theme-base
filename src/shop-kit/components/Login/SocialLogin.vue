@@ -195,8 +195,8 @@ export default {
   }
 
   .sk-social-login li svg {
-    width: 32px;
-    height: 32px;
+    width: 42px;
+    height: 42px;
   }
 
   .sk-social-login li .sk-icon {
@@ -204,45 +204,76 @@ export default {
     transition: all .3s;
   }
 
-  .sk-social-login li:hover .s-icon-weixin .sk-icon {
+  /* .sk-social-login li:hover .s-icon-weixin .sk-icon {
+    color: #59bf39;
+  } */
+
+  .sk-social-login li .s-icon-weixin .sk-icon {
     color: #59bf39;
   }
 
-  .sk-social-login li:hover .s-icon-qq .sk-icon {
+  /* .sk-social-login li:hover .s-icon-qq .sk-icon {
+    color: #56a2e2;
+  } */
+
+  .sk-social-login li .s-icon-qq .sk-icon {
     color: #56a2e2;
   }
 
-  .sk-social-login li:hover .s-icon-netease .sk-icon {
+  /* .sk-social-login li:hover .s-icon-netease .sk-icon {
+    color: #ea4242;
+  } */
+
+  .sk-social-login li .s-icon-netease .sk-icon {
     color: #ea4242;
   }
 
-  .sk-social-login li:hover .s-icon-douban .sk-icon {
+  /* .sk-social-login li:hover .s-icon-douban .sk-icon {
+    color: #5ec630;
+  } */
+
+  .sk-social-login li .s-icon-douban .sk-icon {
     color: #5ec630;
   }
 
-  .sk-social-login li:hover .s-icon-weibo .sk-icon {
+  /* .sk-social-login li:hover .s-icon-weibo .sk-icon {
+    color: #ec6464;
+  } */
+
+  .sk-social-login li .s-icon-weibo .sk-icon {
     color: #ec6464;
   }
 
-  .sk-social-login li:hover .s-icon-renren .sk-icon {
+  /* .sk-social-login li:hover .s-icon-renren .sk-icon {
+    color: #56a2e2;
+  } */
+
+  .sk-social-login li .s-icon-renren .sk-icon {
     color: #56a2e2;
   }
 
-  .sk-social-login li:hover .s-icon-facebook .sk-icon {
+  /* .sk-social-login li:hover .s-icon-facebook .sk-icon {
+    color: #395599;
+  } */
+
+  .sk-social-login li .s-icon-facebook .sk-icon {
     color: #395599;
   }
 
-  .sk-social-login li:hover .s-icon-instagram .sk-icon {
+  /* .sk-social-login li:hover .s-icon-instagram .sk-icon {
+    color: #A1755C;
+  } */
+
+ .sk-social-login li .s-icon-instagram .sk-icon {
     color: #A1755C;
   }
-
   @media screen and (max-width: 768px) {
     .sk-social-login li:hover span {
       display: none;
     }
     .sk-social-login li svg {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
     }
   }
 </style>

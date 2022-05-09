@@ -1,4 +1,3 @@
-/* eslint-disable */
 // document.currentScript polyfill by Adam Miller
 
 // MIT license

@@ -46,7 +46,7 @@ export default {
     getPoints () {
       // const state = this.state;
       this.isLoading = true
-      let oSend = {
+      const oSend = {
         nopage: 'Y'
       }
       if (this.searchTime === 1) {
@@ -82,6 +82,8 @@ export default {
           return point.point > 0
         } else if (state === 'expenditure') {
           return point.point < 0
+        } else {
+          return false
         }
       })
     },

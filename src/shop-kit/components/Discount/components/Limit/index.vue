@@ -20,8 +20,8 @@
         </div>
         <div class="pro-limit">
           <ul class="pro-limit-ul">
-            <template v-for="(item, index) in products">
-              <li v-if="products" :key="index">
+            <template v-for="(item, index) in productList">
+              <li v-if="productList" :key="index">
                 <a :href="item.page_url" target="_blank" class="act-list-img">
                   <img :src="item.src" :alt="item.image_alt">
                   <div v-if="!item.stock_progress" class="act-sellout-img">
@@ -30,7 +30,7 @@
                 </a>
                 <div class="act-mob">
                   <a :href="item.page_url" target="_blank" class="act-list-link">{{item.name}}</a>
-                  <span class="desc" v-if="item.short_desc">{{item.short_desc}}</span>
+                  <span class="desc" v-if="item.short_desc">{{fnDescHandle(item.short_desc)}}</span>
                   <div class="act-con" v-if="item.stock_progress && !now ">
                     <i class="act-progress" style="color:red">
                       <b class="act-progress-completed" :style="`width:${(100 - item.stock_progress)}%;`"></b>
@@ -66,6 +66,9 @@ import CountDown from '@/shop-kit/components/CountDown.vue'
 import { timestampToTime, countTime } from '@/shop-kit/utils'
 export default {
   name: 'SkLimitDiscounts',
+  components: {
+    CountDown
+  },
   props: ['marketing', 'products'],
   data () {
     return {
@@ -78,21 +81,42 @@ export default {
       endTimeTo: '',
       timeType: 'single',
       isMob: false,
-      now: false
+      now: false,
+      productList: []
+    }
+  },
+  watch: {
+    products (val) {
+      this.setProductList(val)
+
+      this.getlimitdiscounts()
+    },
+    marketing () {
+      this.getlimitdiscounts()
     }
   },
   created () {
+    this.getlimitdiscounts()
+
     if (this.endTime < this.nowTime) {
       this.limitEnd()
     }
+
+    this.setProductList(this.products)
   },
   mounted () {
     this.getlimitdiscounts()
   },
   methods: {
+    setProductList (val) {
+      try {
+        this.productList = JSON.parse(JSON.stringify(val || []))
+      } catch (error) {
+        this.productList = []
+      }
+    },
     getlimitdiscounts () {
       const results = this.marketing.results || {}
-      this.products = this.products || []
       const mInfo = results.info || {}
 
       this.oInfo = results.info || {}
@@ -107,7 +131,7 @@ export default {
         this.now = true
       }
 
-      this.products.forEach((item) => {
+      this.productList.forEach((item) => {
         if (item.date_sell_out) {
           if (this.oInfo.period_type) {
             item.sellouttime = countTime(new Date(new Date(item.date_sell_out).getFullYear(), new Date(item.date_sell_out).getMonth(), new Date(item.date_sell_out).getDate(), mInfo.period_from.slice(0, 2), mInfo.period_from.slice(3, 5), mInfo.period_from.slice(6, 8)), item.date_sell_out)
@@ -141,7 +165,7 @@ export default {
                 }
               }).done(function (res) {
                 if (res.code === 200) {
-                  var fnShare = function () {
+                  const fnShare = function () {
                     // 留给后面做特殊处理
                     return window.yhsdWxShare.info
                   }
@@ -194,7 +218,7 @@ export default {
       const _discountHandle = window.location.pathname.split('/discounts/')[1] || ''
 
       if (_handle && _discountHandle && nMpID) {
-        let cont = window.prompt('请输入手机号', '')
+        const cont = window.prompt('请输入手机号', '')
 
         if (this.$sdk.util.isMobile(cont)) {
           window.fetch(`/api/v1/marketing/${_discountHandle}/reserves`, {
@@ -226,18 +250,11 @@ export default {
       } else {
         window.alert('请选择属性')
       }
-    }
-  },
-  watch: {
-    marketing () {
-      this.getlimitdiscounts()
     },
-    products () {
-      this.getlimitdiscounts()
+    // 处理描述换行
+    fnDescHandle (desc) {
+      return (desc || '').replace(/<br\/>/gi, '\n')
     }
-  },
-  components: {
-    CountDown
   }
 }
 </script>

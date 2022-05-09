@@ -82,8 +82,8 @@ export default {
   methods: {
     spread () {
       // let $tuan = document.querySelector('.s-tuan')
-      let $tuan = this.$refs.stuan
-      let $tuanmob = this.$refs.stuanmob
+      const $tuan = this.$refs.stuan
+      const $tuanmob = this.$refs.stuanmob
       let $height = $tuan.getBoundingClientRect().height
       let $heightmob = $tuanmob.getBoundingClientRect().height
 

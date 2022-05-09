@@ -52,7 +52,7 @@ export default {
   },
   beforeMount () {
     if (this.transition !== 'popup-fade') {
-      this.nowTransition = `popup-slide`
+      this.nowTransition = 'popup-slide'
     }
   },
   mounted () {

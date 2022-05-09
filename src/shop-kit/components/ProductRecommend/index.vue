@@ -10,7 +10,7 @@
         <a :href="item.page_url" class="s-recommend-inner">
           <div class="img" :style="{ backgroundImage: `url(${ getImg((item.feature_image || {}).src || item.src) })` }"></div>
           <div class="info">
-            <div class="desc">{{ item.short_desc }}</div>
+            <div class="desc">{{ fnDescHandle(item.short_desc) }}</div>
             <div class="name">{{ item.name }}</div>
             <div class="sale">
               <div class="prices">
@@ -119,10 +119,10 @@ export default {
       return url
     },
     fnRandom (items) {
-      let markNum = {}
+      const markNum = {}
       if ((items.length - 1) >= this.conf.size) {
         this.isShow = true
-        let opt1 = {
+        const opt1 = {
           range: [0, items.length - 1]
         }
         let currentNum = null
@@ -139,7 +139,7 @@ export default {
           }
         }
         this.selectIndexs = []
-        for (let n in markNum) {
+        for (const n in markNum) {
           this.selectIndexs.push(Number(n))
         }
 
@@ -163,6 +163,10 @@ export default {
     fnChange () {
       this.newProducts = []
       this.fnRandom(this.products)
+    },
+    // 处理描述换行
+    fnDescHandle (desc) {
+      return (desc || '').replace(/<br\/>/gi, '\n')
     }
   },
   computed: {

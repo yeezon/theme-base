@@ -28,7 +28,7 @@ export default {
       if (/check_paying/i.test(this.$route.hash)) {
         this.$confirm({
           title: '支付确认',
-          msg: `是否已支付完成？`
+          msg: '是否已支付完成？'
         }).then(() => {}).catch(() => {}).finally(() => {
           // 避免后退问题
           window.location.replace(window.location.hash.replace('check_paying', 'checked_paying')) // 注意 checked 放前面，不然前面正则会匹配中

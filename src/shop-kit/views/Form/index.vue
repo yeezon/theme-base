@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import closeImg from '@/shop-kit/views/Form/assets/close.png'
-import successImg from '@/shop-kit/views/Form/assets/success.gif' // '//asset.ibanquan.com/image/5dba55d1718a10002e188622/s.gif'
+import closeImg from './assets/close.png'
+import successImg from './assets/success.gif' // '//asset.ibanquan.com/image/5dba55d1718a10002e188622/s.gif'
 
 export default {
   name: 'SkFormView',
@@ -37,30 +37,29 @@ export default {
       this.getForm()
     },
     getForm () {
-      window.fetch('/api/v1/site_form/' + this.handle, {
-        method: 'GET',
-        credentials: 'include'
-      }).then(oRes => {
-        return oRes.json()
-      }).then(oData => {
-        if ((oData || {}).code === 200) {
+      const oSDK = this.$sdk || {}
+
+      oSDK.form && oSDK.form.get(this.handle, data => {
+        const oData = data.res || {}
+
+        if (oData.code === 200) {
           this.oForm = {
-            'site_form': oData.site_form || {},
-            'site_form_columns': oData.site_form_columns || {}
+            site_form: oData.site_form || {},
+            site_form_columns: oData.site_form_columns || {}
           }
         } else {
           this.oForm = {}
         }
-      }).catch(oError => {
-        this.oForm = {}
       })
     },
     fnRender () {
+      const oSDK = this.$sdk || {}
+
       const fnCM = (_class) => {
         return _class
       }
 
-      var fnCheckURL = (url) => {
+      const fnCheckURL = (url) => {
         return /^(https?:)?\/\/([\w-]+\.)+[\w-]+(\/[\w-+_;./?%&=#:,{}()]*)?$/ig.test(url)
       }
 
@@ -68,24 +67,24 @@ export default {
       const sID = this.handle || ''
       const oFormConfigData = this.oForm || {}
 
-      var html = ''
-      var isEditor = !!window.oRef
-      var formBuildErr = ''
+      let html = ''
+      const isEditor = !!window.oRef
+      let formBuildErr = ''
 
-      var fnFormBuilder = function (oData) {
-        var _html = ''
+      const fnFormBuilder = function (oData) {
+        let _html = ''
 
         oData = oData || {}
         oData.site_form = oData.site_form || {}
         oData.site_form_columns = oData.site_form_columns || []
 
         if (oData.site_form.name) {
-          var _name = oData.site_form.name || ''
-          var _desc = oData.site_form.describe || ''
-          var _columns = oData.site_form_columns || []
+          const _name = oData.site_form.name || ''
+          const _desc = oData.site_form.describe || ''
+          const _columns = oData.site_form_columns || []
 
-          var _htmlName = '<h1 class="' + fnCM('sk-form-name') + '">' + _name + '</h1>'
-          var _htmlDesc = '<div class="' + fnCM('sk-form-desc') + '">' + _desc + '</div>'
+          const _htmlName = '<h1 class="' + fnCM('sk-form-name') + '">' + _name + '</h1>'
+          const _htmlDesc = '<div class="' + fnCM('sk-form-desc') + '">' + _desc + '</div>'
 
           _html = '<div class="' + fnCM('sk-form-form_box') + '">'
 
@@ -95,8 +94,8 @@ export default {
           if (_columns.length > 0) {
             _html += '<form class="' + fnCM('sk-form-form') + '" action="" method="post">'
 
-            for (var _i = 0; _i < _columns.length; _i++) {
-              var oColumn = _columns[_i]
+            for (let _i = 0; _i < _columns.length; _i++) {
+              const oColumn = _columns[_i]
 
               if (oColumn.column_type === 'text') {
                 _html += '' +
@@ -203,6 +202,7 @@ export default {
                 if (_oConfig.version === '0.0.1' && _oConfig.values.length > 0) {
                   _html += '<select class="' + fnCM('sk-form-form_item_select') + '" name="' + oColumn.id + '" data-required="' + oColumn.column_required + '">'
 
+                  _html += '<option value="">请选择</option>'
                   _oConfig.values.forEach(function (val) {
                     _html += '<option value="' + val + '">' + val + '</option>'
                   })
@@ -258,6 +258,26 @@ export default {
                       '  </div>' +
                       '</div>'
               }
+
+              if (oColumn.column_type === 'datetime') {
+                _html += '' +
+                      '<div class="' + fnCM('sk-form-form_item') + ' ' + (oColumn.column_required ? fnCM('sk-form-form_item_required') : '') + '">' +
+                      '  <div class="' + fnCM('sk-form-form_item_name') + '">' + oColumn.column_name + '</div>'
+
+                if (oColumn.column_desc) {
+                  if (fnCheckURL(oColumn.column_desc)) {
+                    _html += '<img class="' + fnCM('sk-form-form_item_desc-img') + '" src="' + oColumn.column_desc + '" alt="' + oColumn.column_name + '" />'
+                  } else {
+                    _html += '<div class="' + fnCM('sk-form-form_item_desc') + '">' + oColumn.column_desc + '</div>'
+                  }
+                }
+
+                _html += '' +
+                      '  <div class="' + fnCM('sk-form-form_item_model') + '">' +
+                      '    <input class="' + fnCM('sk-form-form_item_datetime') + '" type="datetime-local" name="' + oColumn.id + '" data-required="' + oColumn.column_required + '" />' +
+                      '  </div>' +
+                      '</div>'
+              }
             }
 
             _html += '<div class="' + fnCM('sk-form-form_errors') + '"></div>'
@@ -285,7 +305,7 @@ export default {
 
         if (html) {
           window.$($el.querySelector('.' + fnCM('sk-form-cntr'))).html(html)
-          var eForm = $el.querySelector('.' + fnCM('sk-form-form'))
+          const eForm = $el.querySelector('.' + fnCM('sk-form-form'))
 
           eForm.addEventListener('submit', function (evt) {
             evt.stopPropagation()
@@ -300,16 +320,16 @@ export default {
             if (isEditor) {
               window.alert('后台环境操作无效')
             } else {
-              var eTarget = evt.target
-              var oSendData = {}
-              var errors = []
-              var _htmlErr = ''
+              const eTarget = evt.target
+              const oSendData = {}
+              const errors = []
+              let _htmlErr = ''
 
-              var _serializeArray = window.$(eTarget).serializeArray() || []
-              var oSetData = {}
+              const _serializeArray = window.$(eTarget).serializeArray() || []
+              const oSetData = {}
 
-              var _arrIndex = 0
-              var _oItem = {}
+              let _arrIndex = 0
+              let _oItem = {}
               for (_arrIndex = 0; _arrIndex < _serializeArray.length; _arrIndex++) {
                 _oItem = _serializeArray[_arrIndex]
                 oSetData[_oItem.name] = _oItem.value || ''
@@ -317,11 +337,12 @@ export default {
 
               // 以 site_form_columns 数据项为准
               (oFormConfigData.site_form_columns || []).forEach(function (oColumn) {
-                if (oColumn.column_type === 'checkbox') {
-                  var _values = []
-                  var _val = ''
+                let _val = ''
 
-                  var _key = ''
+                if (oColumn.column_type === 'checkbox') {
+                  const _values = []
+
+                  let _key = ''
                   for (_key in oSetData) {
                     if (_key.indexOf(oColumn.id) > -1) {
                       _val = oSetData[_key] || ''
@@ -340,6 +361,16 @@ export default {
                 } else {
                   _val = oSetData[oColumn.id] || ''
 
+                  // 修正为 ISO 标准的 UTC 时间
+                  if ((oColumn.column_type === 'datetime') && _val) {
+                    try {
+                      _val = new Date(_val).toISOString() || ''
+                    } catch (error) {
+                      // 有错误直接置空
+                      _val = ''
+                    }
+                  }
+
                   if (oColumn.column_required && !_val) {
                     errors.push('请填写：' + oColumn.column_name)
                   }
@@ -348,7 +379,7 @@ export default {
                 }
               })
 
-              var eFormErrors = $el.querySelector('.' + fnCM('sk-form-form_errors'))
+              const eFormErrors = $el.querySelector('.' + fnCM('sk-form-form_errors'))
               // var eFormSubmitWrap = $el.querySelector('.' + fnCM('sk-form-form_item_submit_wrap'))
 
               if (errors.length > 0) {
@@ -361,7 +392,7 @@ export default {
                 (eFormErrors || {}).innerHTML = ''
 
                 // checkbox 数组值转换成 String
-                var _sendKey = ''
+                let _sendKey = ''
                 for (_sendKey in oSendData) {
                   if (Array.isArray(oSendData[_sendKey])) {
                     // oSendData[_sendKey] = JSON.stringify(oSendData[_sendKey])
@@ -372,26 +403,18 @@ export default {
                 if ((oFormConfigData.site_form || {}).status === 0) {
                   window.alert('表单为发布状态时才能提交数据')
                 } else {
-                  window.fetch('/api/v1/site_form/create_collection/' + sID || null, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                      data: oSendData
-                    })
-                  }).then(function (oRes) {
-                    return oRes.json()
-                  }).then(function (oData) {
-                    if ((oData || {}).code === 200) {
+                  oSDK.form && oSDK.form.submit({
+                    handle: sID,
+                    data: oSendData
+                  }, data => {
+                    const oData = data.res || {}
+
+                    if (oData.code === 200) {
                       eForm.classList.add('i-success')
                       // (eFormSubmitWrap || {}).innerHTML = '<span class="' + fnCM('sk-form-form_done') + '">操作成功</span>'
                     } else {
                       (eFormErrors || {}).innerHTML = '<div class="' + fnCM('sk-form-form_errors_item') + '">操作失败，请稍后再试</div>'
                     }
-                  }).catch(oError => {
-                    (eFormErrors || {}).innerHTML = '<div class="' + fnCM('sk-form-form_errors_item') + '">操作失败，请稍后再试</div>'
                   })
                 }
               }
@@ -591,6 +614,17 @@ export default {
   display: inline-block;
   margin: 0 10px 0 8px;
 }
+.sk-form-form_item_datetime {
+  display: block;
+  box-sizing: border-box;
+  padding: 3px 10px;
+  width: 100%;
+  border: 1px solid #bfbfbf;
+  border-radius: 3px;
+  font-size: 14px;
+  line-height: 1.8em;
+  outline: none;
+}
 .sk-form-form_errors {
   margin: 25px 0 0;
 }
@@ -710,6 +744,15 @@ export default {
     padding: 15px 16px 0 0;
     width: calc(100% + 16px);
     height: calc(1.8em * 3 + 16px);
+    border: 0 solid #ededed;
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+  .sk-form-form_item_datetime {
+    box-sizing: border-box;
+    margin: 0 -16px 0 0;
+    padding: 15px 16px 0 0;
+    width: calc(100% + 16px);
     border: 0 solid #ededed;
     border-width: 1px 0 0;
     border-radius: 0;

@@ -1,69 +1,86 @@
 
+const THEME_ASSETS_URL = (((((window.document.currentScript || {}).src || '').match(/(.+\/)[^/]+\.js/) || [])[1]) || '').replace(/js\/$/, '') || '/'
+const THEME_EPOCH = (((window.document.currentScript || {}).src || '').match(/v=([0-9_]+)/) || [])[1] || ''
+
+const CDN_URL = '//asset.ibanquan.com'
+
+const defImgPath = '/common/img/default_image.png'
+const assetPath = '/image/'
+
 // 改成 import JSSDK
-function getImageUrl (imageID, imageName, imageSize, imageEpoch) {
-  if (!imageID || !imageName) {
-    var aDef = window.productImage.split('.')
-    aDef[0] = aDef[0] + '_' + imageSize
-    var sDef = aDef.join('.')
-    var sPath = window.assetPath
-    if (!sPath) {
-      sPath = window.assetHost
-    }
-    sDef = sPath + sDef
-    return sDef
+function getImageURL (imgID, imgName, imgSize, imgEpoch) {
+  if (!imgID || !imgName) {
+    // 后面加上 imgSize 支持
+    return CDN_URL + defImgPath
   }
-  var sHost = window.assetHost
-  if (!sHost) {
-    sHost = window.assetPath
-  }
-  sHost = sHost + imageID + '/'
-  var sFileName = imageName
-  if (imageSize) {
-    var aSplit = imageName.split('.')
-    var nLen = aSplit.length
+
+  let sURL = `${CDN_URL}${assetPath}${imgID}/`
+
+  let sFileName = imgName
+  if (imgSize) {
+    const aSplit = imgName.split('.')
+
+    const nLen = aSplit.length
+
     if (nLen > 1) {
-    // var sImageSize = '_' + imageSize;
-    // var sFileNotExt = aSplit[nLen - 2];
-    // aSplit[nLen - 2] = sFileNotExt + sImageSize;
-    // sFileName = aSplit.join('.');
-      var sImageSize = 's_' + imageSize
-      var sFileExtName = aSplit.pop()
-      sFileName = sImageSize + '.' + sFileExtName
+      const sImgSize = 's_' + imgSize
+      const sFileExtName = aSplit.pop()
+
+      sFileName = sImgSize + '.' + sFileExtName
     } else {
-    // alert('文件没有后缀名？');
+      // 文件没有后缀名
     }
   }
-  sHost = sHost + sFileName
-  if (imageEpoch) {
-    sHost = sHost + '?v=' + imageEpoch
+
+  sURL = sURL + sFileName
+
+  if (imgEpoch) {
+    sURL = sURL + '?v=' + imgEpoch
   }
-  return sHost
+
+  return sURL
 }
 
-function imgURL (image, size = '') {
+function imgURL (img, size) {
   // 参数类型处理
-  image = image || ''
+  img = img || ''
   size = size || '' // size 为 '' 即为原尺寸
 
-  // 根据屏幕自动优化大小
-  const nDevicePixelRatio = window.devicePixelRatio || 1
+  // 根据屏幕自动优化大小，暂时最大三倍，后面根据网络环境再判断
+  const nDevicePixelRatio = (window.devicePixelRatio > 3) ? 3 : window.devicePixelRatio
   let [width, height] = size.split('x')
 
-  width = nDevicePixelRatio * Number(width || 0)
-  height = nDevicePixelRatio * Number(height || 0)
+  // nDevicePixelRatio 可能是小数
+  width = window.parseInt(nDevicePixelRatio * Number(width || 0))
+  height = window.parseInt(nDevicePixelRatio * Number(height || 0))
 
   if (width && height) {
     size = `${width}x${height}`
   }
 
-  if (typeof image === 'object') {
-    return getImageUrl(image.image_id, image.image_name, size, image.image_epoch)
-  } else {
-    const imageID = (image.match(/\/image\/([^/]*)/) || [null, image])[1] || ''
-    const imageEpoch = (image.match(/v=([\d]*)/) || [])[1] || ''
+  let _imgURL = ''
 
-    return getImageUrl(imageID, 's.png', size, imageEpoch)
+  if (typeof img === 'object') {
+    _imgURL = getImageURL(img.image_id, img.image_name, size, img.image_epoch)
+  } else if ((/^\/[^/]/.test(img))) {
+    // 处理主题自身图片
+    if (process.env.NODE_ENV === 'production') {
+      const _imgName = img.match(/\/([^./]+\.[^/]+$)/)[1] || ''
+
+      _imgURL = THEME_ASSETS_URL + _imgName.replace(/\.[^.]+$/, '')
+    } else {
+      _imgURL = THEME_ASSETS_URL + img.replace(/^\//, '')
+    }
+
+    _imgURL += `?v=${THEME_EPOCH}`
+  } else {
+    const imgID = (img.match(/\/image\/([^/]*)/) || [null, img])[1] || ''
+    const imgEpoch = (img.match(/v=([\d]*)/) || [])[1] || ''
+
+    _imgURL = getImageURL(imgID, 's.png', size, imgEpoch)
   }
+
+  return _imgURL
 }
 
 export default imgURL

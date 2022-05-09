@@ -62,6 +62,7 @@
               <option value="快递/物流一直未送到">快递/物流一直未送到</option>
               <option value="快递/物流无跟踪记录">快递/物流无跟踪记录</option>
               <option value="货物破损已拒签">货物破损已拒签</option>
+              <option value="其他">其他原因</option>
             </select>
           </su-form-item>
           <su-form-item prop="refund_amount" label="退款金额：" required>
@@ -72,7 +73,7 @@
               v-model="formData.refund_amount"
             ></su-input>
             <div class="s-input-tips">
-              最多
+              可修改，最多
               <su-currency :val="info.trade_after_sale.max_refund_amount" :zero="false"></su-currency>，含发货邮费
               <su-currency :val="info.trade_after_sale.refund_shipment" :zero="false"></su-currency>
             </div>
@@ -125,7 +126,7 @@
               v-model.number="formData.refund_amount"
             ></su-input>
             <div class="s-input-tips">
-              最多
+              可修改，最多
               <su-currency :val="info.trade_after_sale.max_refund_amount" :zero="false"></su-currency>，含发货邮费
               <su-currency :val="info.trade_after_sale.refund_shipment" :zero="false"></su-currency>
             </div>
@@ -161,6 +162,7 @@
               <option value="商品错发">商品错发</option>
               <option value="包装破损">包装破损</option>
               <option value="商品漏发少件">商品漏发少件</option>
+              <option value="其他">其他原因</option>
             </select>
           </su-form-item>
           <su-form-item prop="customer_remark" label="换货说明：" required>
@@ -242,12 +244,13 @@ export default {
     getInfo () {
       const id = this.$route.query.sale_id
       this.$sdk.service.get(id, ({ res }) => {
-        // console.log(res)
+        // console.log('res => ', res)
         this.info = res
+        this.formData.refund_amount = Math.abs((res.trade_after_sale.max_refund_amount || 0) / 100).toFixed(2)
       })
     },
     fnUploadChange (imgs) {
-      let idsArr = []
+      const idsArr = []
       if (!imgs.length) {
         this.formData.image_ids = ''
       } else {
@@ -267,7 +270,7 @@ export default {
       )
     },
     fnComfirn () {
-      let oData = {
+      const oData = {
         id: this.trade_after_sale_id,
         type:
           this.info.trade_after_sale &&
@@ -287,19 +290,19 @@ export default {
           return
         }
         if (!window.String(oData.refund_amount)) {
-          this.$toast.info(`请输入退款金额`)
+          this.$toast.info('请输入退款金额')
           return
         }
         if (
           !/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(oData.refund_amount)
         ) {
-          this.$toast.info(`请正确输入退款金额`)
+          this.$toast.info('请正确输入退款金额')
           return
         }
         if (
           oData.refund_amount > this.info.trade_after_sale.max_refund_amount
         ) {
-          this.$toast.info(`退款金额不能超过最大可退金额`)
+          this.$toast.info('退款金额不能超过最大可退金额')
           return
         }
       }
@@ -310,27 +313,27 @@ export default {
           return
         }
         if (!window.String(oData.refund_amount)) {
-          this.$toast.info(`请输入退款金额`)
+          this.$toast.info('请输入退款金额')
           return
         }
         if (
           !/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/g.test(oData.refund_amount)
         ) {
-          this.$toast.info(`请正确输入退款金额`)
+          this.$toast.info('请正确输入退款金额')
           return
         }
         if (
           oData.refund_amount > this.info.trade_after_sale.max_refund_amount
         ) {
-          this.$toast.info(`退款金额不能超过最大可退金额`)
+          this.$toast.info('退款金额不能超过最大可退金额')
           return
         }
         if (!oData.customer_remark) {
-          this.$toast.info(`请填写退货说明`)
+          this.$toast.info('请填写退货说明')
           return
         }
         if (!oData.image_ids) {
-          this.$toast.info(`请上传图片`)
+          this.$toast.info('请上传图片')
           return
         }
       }
@@ -341,11 +344,11 @@ export default {
           return
         }
         if (!oData.customer_remark) {
-          this.$toast.info(`请填写换货说明`)
+          this.$toast.info('请填写换货说明')
           return
         }
         if (!oData.image_ids) {
-          this.$toast.info(`请上传图片`)
+          this.$toast.info('请上传图片')
           return
         }
       }

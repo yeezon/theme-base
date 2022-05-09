@@ -41,14 +41,14 @@ export default {
     }
   },
   data () {
-    var checkAccount = (rule, value, callback) => {
+    const checkAccount = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入手机号'))
       } else {
         this.fnCheckAccountStater(value, callback)
       }
     }
-    var checkVerifyCode = (rule, value, callback) => {
+    const checkVerifyCode = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('短信验证码不能为空'))
       } else {
@@ -159,7 +159,7 @@ export default {
       let time = 60
       self.time = time
       self.getCodeLoading = true
-      var interval = setInterval(function () {
+      const interval = setInterval(function () {
         time--
         self.time = time
         if (time <= 0) {

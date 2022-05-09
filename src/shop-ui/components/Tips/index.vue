@@ -60,11 +60,11 @@ export default {
       }, 100)
     },
     resetContentPosition () {
-      let $content = this.$refs.content
-      let htmlScrollLeft = document.querySelector('html').scrollLeft
-      let rect = $content.getBoundingClientRect()
+      const $content = this.$refs.content
+      const htmlScrollLeft = document.querySelector('html').scrollLeft
+      const rect = $content.getBoundingClientRect()
       let moveX = 0
-      let clientWidth = window.innerWidth
+      const clientWidth = window.innerWidth
 
       if (rect.left - htmlScrollLeft < 0) {
         moveX = Math.ceil(Math.abs(rect.left))

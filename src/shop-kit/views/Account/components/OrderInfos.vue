@@ -8,22 +8,22 @@
     <SkIcon class="s-title_icon" name="order" />
     <span class="s-title_text">我的订单</span>
   </div>
-  <div class="s-links">
-    <button @click="fnTo('/account/orders#wait_pay')" class="s-link">
+  <div class="s-links" ref="links">
+    <button @click="fnTo('/account/orders',1)" class="s-link">
       <SkIcon class="s-icon" name="order_wait_pay" />
       <span class="s-cont">
         <span class="s-label">待付款</span>
         <span v-if="waitPay" class="s-tip">{{ waitPay }}</span>
       </span>
     </button>
-    <button @click="fnTo('/account/orders#wait_get')" class="s-link">
+    <button @click="fnTo('/account/orders',2)" class="s-link">
       <SkIcon class="s-icon" name="order_wait_get" />
       <span class="s-cont">
         <span class="s-label">待收货</span>
         <span v-if="waitGet" class="s-tip">{{ waitGet }}</span>
       </span>
     </button>
-    <button @click="fnTo('/account/orders#comments')" class="s-link">
+    <button @click="fnTo('/account/orders',4)" class="s-link">
       <SkIcon class="s-icon" name="order_comments" />
       <span class="s-cont">
         <span class="s-label">待评价</span>
@@ -36,13 +36,13 @@
         <span class="s-label">已完成</span>
       </span>
     </button> -->
-    <button @click="fnTo('/account/services/orders')" class="s-link i-services">
+    <button @click="fnTo('/account/services/orders','')" class="s-link i-services">
       <SkIcon class="s-icon" name="order_services" />
       <span class="s-cont">
         <span class="s-label">退换/售后</span>
       </span>
     </button>
-    <button @click="fnTo('/account/orders')" class="s-link i-order_all">
+    <button @click="fnTo('/account/orders',0)" class="s-link i-order_all">
       <SkIcon class="s-icon" name="order_all" />
       <span class="s-cont">
         <span class="s-label">全部订单</span>
@@ -78,8 +78,17 @@ export default {
     }
   },
   methods: {
-    fnTo (path) {
-      this.$router.push(path)
+    fnTo (path, index) {
+      if (index === '') {
+        this.$router.push(path)
+      } else {
+        this.$router.push({
+          path: path,
+          query: {
+            status: index
+          }
+        })
+      }
     }
   }
 }

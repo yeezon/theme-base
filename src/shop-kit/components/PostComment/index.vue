@@ -63,14 +63,14 @@ function getComment (id, page) {
   })
 }
 function getSetting (page) {
-  return window.fetch(`/api/v1/post/comments/setting`, {
+  return window.fetch('/api/v1/post/comments/setting', {
     credentials: 'include'
   })
 }
 export default {
   name: 'SkPostComment',
   data () {
-    var checkComment = (rule, value, callback) => {
+    const checkComment = (rule, value, callback) => {
       this.fncheckCommentStater(value, callback)
     }
     // var checkCode = (rule, value, callback) => {
@@ -138,7 +138,7 @@ export default {
             return oRes.json()
           }).then(res => {
             if (res.code === 200) {
-              let _data = res.msg
+              const _data = res.msg
               // this.is_empty = _data.is_empty
               this.comments = _data.results || []
             }
@@ -149,7 +149,7 @@ export default {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
-          let _data = res.msg.results
+          const _data = res.msg.results
           this.minLength = _data.min_content_length
           this.isShowComment = _data.enable_option
           this.isReviewComment = _data.enable_review
@@ -194,8 +194,8 @@ export default {
             this.errCodeMsg = '验证码不能为空'
             return
           }
-          let _this = this
-          window.fetch(`/api/v1/post/comments/create`, {
+          const _this = this
+          window.fetch('/api/v1/post/comments/create', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -214,7 +214,7 @@ export default {
               console.log('评论成功200')
               _this.errCode = false
               _this.errCodeMsg = ''
-              let inputData = {
+              const inputData = {
                 content: _this.inputData.comment,
                 created_at: new Date().toISOString()
               }

@@ -50,7 +50,7 @@ module.exports = {
         return options
       })
       .end()
-    
+
     // Images
     config.module
       .rule('images')

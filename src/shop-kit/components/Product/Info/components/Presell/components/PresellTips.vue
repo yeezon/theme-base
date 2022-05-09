@@ -50,9 +50,9 @@ export default {
       // 节流
       let last, deferTimer
       return function (args) {
-        let that = this
-        let _args = arguments
-        let now = +new Date()
+        const that = this
+        const _args = arguments
+        const now = +new Date()
         if (last && now < last + delay) {
           clearTimeout(deferTimer)
           deferTimer = setTimeout(function () {

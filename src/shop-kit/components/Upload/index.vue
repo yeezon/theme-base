@@ -98,7 +98,7 @@ export default {
       this.$emit('change', this.imgs)
     },
     fnUploadFormData (formData, cb) {
-      window.fetch(`/api/v1/service/upload_image`, {
+      window.fetch('/api/v1/service/upload_image', {
         method: 'POST',
         credentials: 'include',
         body: formData

@@ -13,12 +13,13 @@ import ShopKit from './shop-kit'
 import Components from './components'
 
 import './icons' // Icons，后面优化成用 Vue.use
-
 import './styles'
 
 import { toComponentName } from './utils'
 import fixSDK from './utils/fix_sdk'
 import i18n from './i18n'
+
+import './vendors/jssdk' // 后续优化，避免影响全局
 
 // Fix Vue CLI BUG
 // Runtime PublicPath

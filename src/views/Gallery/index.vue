@@ -87,13 +87,13 @@ function getMoreComment (id, lastId) {
   })
 }
 function getSetting () {
-  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+  return window.fetch('/api/v1/image-posts/comments/setting', {
     credentials: 'include'
   })
 }
 export default {
   data () {
-    var checkGalleryComment = (rule, value, callback) => {
+    const checkGalleryComment = (rule, value, callback) => {
       this.fncheckCommentStater(value, callback)
     }
     return {
@@ -149,7 +149,7 @@ export default {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
-          let _data = res.msg.results
+          const _data = res.msg.results
           this.minLength = _data.min_content_length
           this.isShowComment = _data.enable_option
           this.isReviewComment = _data.enable_review
@@ -162,8 +162,8 @@ export default {
     },
     fnComment (id, comment) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/image-posts/comments`, {
+      const _this = this
+      window.fetch('/api/v1/image-posts/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -178,7 +178,7 @@ export default {
       }).then(function (oData) {
         if ((oData || {}).code === 200) {
           console.log('评论成功')
-          let inputData = {
+          const inputData = {
             customer: {
               avatar: {
                 src: _this.$store.state.account.oInfo.avatar_url
@@ -209,8 +209,8 @@ export default {
     },
     fnFavorTopic (item) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/topics/favorites`, {
+      const _this = this
+      window.fetch('/api/v1/topics/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -252,8 +252,8 @@ export default {
     },
     fnFavor (item) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/image-posts/favorites`, {
+      const _this = this
+      window.fetch('/api/v1/image-posts/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -294,7 +294,7 @@ export default {
       })
     },
     fnZan (item) {
-      window.fetch(`/api/v1/image-posts/comments/likes`, {
+      window.fetch('/api/v1/image-posts/comments/likes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

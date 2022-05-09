@@ -204,7 +204,7 @@ export default {
     getProducts (products) {
       this.type = products.rtype
       const oProducts = products.products_name
-      let handlesArr = []
+      const handlesArr = []
       if (!oProducts || !oProducts.length) return
       oProducts.forEach(pro => {
         handlesArr.push(pro[0])

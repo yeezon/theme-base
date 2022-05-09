@@ -81,7 +81,12 @@ export default {
   },
   created () {
     this.getOrderCount()
-    this.getOrders()
+    if (this.$route.query.status) {
+      this.state = parseInt(this.$route.query.status)
+      this.changeTag(this.state)
+    } else {
+      this.getOrders()
+    }
   },
   methods: {
     changeTag (state) {

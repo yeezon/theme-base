@@ -15,7 +15,7 @@
 <script>
 import Topic from './Topic'
 function getTopics () {
-  return window.fetch(`/api/v1/topics/favorites`, {
+  return window.fetch('/api/v1/topics/favorites', {
     credentials: 'include'
   })
 }
@@ -44,8 +44,8 @@ export default {
       })
     },
     favor (item) {
-      let _this = this
-      window.fetch(`/api/v1/topics/favorites`, {
+      const _this = this
+      window.fetch('/api/v1/topics/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ export default {
       })
     },
     favorOut (item, index) {
-      let _this = this
+      const _this = this
       window.fetch(`/api/v1/topics/favorites?id=${item.id}`, {
         method: 'DELETE',
         headers: {

@@ -36,7 +36,7 @@ function getMoreComment (id, lastId) {
   })
 }
 function getSetting () {
-  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+  return window.fetch('/api/v1/image-posts/comments/setting', {
     credentials: 'include'
   })
 }
@@ -77,7 +77,7 @@ export default {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
-          let _data = res.msg.results
+          const _data = res.msg.results
           this.minLength = _data.min_content_length
           this.isShowComment = _data.enable_option
           this.isReviewComment = _data.enable_review
@@ -86,8 +86,8 @@ export default {
       })
     },
     fnPublish (comment) {
-      let _this = this
-      window.fetch(`/api/v1/image-posts/comments`, {
+      const _this = this
+      window.fetch('/api/v1/image-posts/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ export default {
         return oRes.json()
       }).then(function (oData) {
         if ((oData || {}).code === 200) {
-          let inputData = {
+          const inputData = {
             customer: {
               avatar: {
                 src: _this.$store.state.account.oInfo.avatar_url
@@ -130,7 +130,7 @@ export default {
       })
     },
     fnZan (item) {
-      window.fetch(`/api/v1/image-posts/comments/likes`, {
+      window.fetch('/api/v1/image-posts/comments/likes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -186,7 +186,7 @@ export default {
       this.$router.back()
     },
     FnBottom () {
-      let page = document.getElementsByClassName('settings-body_background')[0]
+      const page = document.getElementsByClassName('settings-body_background')[0]
       page.style.paddingBottom = '57px'
     }
   },

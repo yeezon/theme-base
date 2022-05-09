@@ -191,7 +191,9 @@ export default {
       if (desc === '美智聚合支付') {
         desc = '在线支付'
       }
-
+      if (desc && desc.indexOf('（') > -1) {
+        desc = desc.slice(0, desc.indexOf('（'))
+      }
       return desc
     },
     // 只能主动，watch payMethodType 只能 change 模式 不能 input 模式

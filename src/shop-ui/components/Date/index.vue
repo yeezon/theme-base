@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     YEARS () {
-      let years = []
+      const years = []
       const curYear = (new Date()).getFullYear()
       for (let y = curYear; y >= 1928; y--) {
         years.push(y)
@@ -46,14 +46,14 @@ export default {
       return years
     },
     MONTHS () {
-      let months = []
+      const months = []
       for (let m = 1; m <= 12; m++) {
         months.push(m)
       }
       return months
     },
     DAYS () {
-      let days = []
+      const days = []
       const maxDay = this.getDaysInMonth(this.year, this.month)
       for (let d = 1; d <= maxDay; d++) {
         days.push(d)
@@ -70,7 +70,7 @@ export default {
     },
     // 校准日
     getDaysInMonth (year, month) {
-      let dateObject = new Date()
+      const dateObject = new Date()
       dateObject.setFullYear(year, month, 0)
       return dateObject.getDate()
     },

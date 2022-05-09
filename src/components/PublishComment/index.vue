@@ -52,7 +52,7 @@ export default {
       this.comment = ''
     },
     changeBlur () {
-      let isIOS = /(iphone|ipad)/i.test(window.navigator.userAgent)
+      const isIOS = /(iphone|ipad)/i.test(window.navigator.userAgent)
       if (isIOS) {
         setTimeout(() => {
           const scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0

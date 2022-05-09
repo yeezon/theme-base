@@ -125,7 +125,7 @@ export default {
     },
     // 确认设置默认地址
     confirmSetDefault: function () {
-      let _address = this.oEditAddress
+      const _address = this.oEditAddress
       _address.is_default = true
       this.$sdk.address.save(_address, data => {
         this.defaultDialog = false

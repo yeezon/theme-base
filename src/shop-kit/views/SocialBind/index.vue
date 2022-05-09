@@ -62,7 +62,7 @@ export default {
     sLogin
   },
   data () {
-    var validateEmail = (rule, value, callback) => {
+    const validateEmail = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('邮箱地址不能为空'))
       } else if (!this.$sdk.util.isEmail(value)) {
@@ -71,7 +71,7 @@ export default {
         callback()
       }
     }
-    var validateMobile = (rule, value, callback) => {
+    const validateMobile = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('手机不能为空'))
       } else if (!this.$sdk.util.isMobile(value)) {
@@ -125,7 +125,10 @@ export default {
         }
         this.$sdk.account[this.method](this.user, data => {
           if (data.res.code === 200) {
-            this.$router.push('/')
+            const cookieBack = this.$sdk.util.getCookie('redirect_back_url')
+            const url = cookieBack ? window.decodeURIComponent(cookieBack) : '/'
+            this.$sdk.util.setCookie('redirect_back_url', '')
+            this.$router.push(url)
           } else {
             window.alert(data.res.message || '未知错误')
           }

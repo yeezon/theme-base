@@ -12,7 +12,7 @@
 <script>
 import PointItem from './components/Items.vue'
 function getProducts () {
-  return window.fetch(`/api/v1/marketing/point-exchanges-v2?size=99999`, {
+  return window.fetch('/api/v1/marketing/point-exchanges-v2?size=99999', {
     credentials: 'include'
   })
 }

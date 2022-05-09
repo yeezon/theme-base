@@ -45,7 +45,7 @@ export default {
     getFavorites () {
       this.$sdk.favorite.get({ id_type: 1 }, ({ res }) => {
         const favorites = res.favorites || []
-        let ids = []
+        const ids = []
         // window.console.log(res);
         if (favorites.length) {
           for (let i = 0; i < favorites.length; i++) {

@@ -54,6 +54,7 @@ export default {
       this.isLoading = true
       this.$sdk.coupon.get({ status: state, ...this.query }, ({ res }) => {
         this.isLoading = false
+        this.coupons = []
         if (res.code === 200) {
           if (!res.coupons || !res.coupons.length) return
           this.coupons = res.coupons

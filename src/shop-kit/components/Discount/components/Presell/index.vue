@@ -31,7 +31,7 @@
           {{item.name}}
         </a>
         <a :href="item.page_url" class="s-item-desc">
-          <span class="s-short-desc txt-overflow" v-if="item.short_desc">{{item.short_desc}}</span>
+          <span class="s-short-desc txt-overflow" v-if="item.short_desc">{{fnDescHandle(item.short_desc)}}</span>
           <span class="s-event-price">{{item.origin_price | currency}}</span>
         </a>
       </li>
@@ -105,6 +105,10 @@ export default {
         this.current_page++
         this.$emit('preselltag', this.current_page)
       }
+    },
+    // 处理描述换行
+    fnDescHandle (desc) {
+      return (desc || '').replace(/<br\/>/gi, '\n')
     }
   },
   filters: {

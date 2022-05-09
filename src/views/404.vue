@@ -40,7 +40,7 @@ export default {
 
       switch (true) {
         case fnCheck('/products/.+'):
-          _tip = '由于当前网站版本尚不支持该功能，您可以尝试升级版本获取该功能'
+          // _tip = '由于当前网站版本尚不支持该功能，您可以尝试升级版本获取该功能'
           break
         default:
           _tip = '可能当前网站主题尚不支持该功能，您可以尝试升级主题或与主题开发者沟通获取该功能'

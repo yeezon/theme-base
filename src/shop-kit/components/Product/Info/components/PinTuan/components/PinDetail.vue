@@ -339,7 +339,7 @@ export default {
           }
         }
       } else {
-
+        // Code...
       }
     },
     oNowSku (oVal) {
@@ -355,7 +355,7 @@ export default {
 
         this.oSkuMap = _oSkuMap
       } else {
-
+        // Code...
       }
     }
   },
@@ -402,9 +402,9 @@ export default {
           this.productContent = this.oProduct.content_html
         }
 
-        this.oLine.map((item) => {
+        for (const item of this.oLine) {
           item.src = this.$sdk.util.getImageUrl(this.oLine[0].feature_image.image_id, this.oLine[0].feature_image.image_name, '160x160', this.oLine[0].feature_image.image_epoch)
-        })
+        }
 
         if (this.oOrder.groupon_force_success && this.oOrder.order_status === 1) {
           const oGroupon = Array.from(this.oGroupon)
@@ -521,7 +521,7 @@ export default {
     closeDialog () {
       this.isShowDialog = false
       this.nSkuID = window.parseInt(this.$route.query.variant_id) || null
-      let _oSku = this.oSkuMap[this.nSkuID] || null
+      const _oSku = this.oSkuMap[this.nSkuID] || null
       this.fnSkuChange(_oSku)
     },
     FnOrder () {
@@ -614,15 +614,15 @@ export default {
     },
     draw () {
       return new Promise((resolve, reject) => {
-        var canvas = document.getElementById('tutorial')
-        var ctx = canvas.getContext('2d')
+        const canvas = document.getElementById('tutorial')
+        const ctx = canvas.getContext('2d')
         // 绘图清晰
-        var devicePixelRatio = window.devicePixelRatio || 1
-        var backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1
-        var ratio = devicePixelRatio / backingStoreRatio
+        const devicePixelRatio = window.devicePixelRatio || 1
+        const backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1
+        const ratio = devicePixelRatio / backingStoreRatio
 
-        var oldWidth = canvas.width
-        var oldHeight = canvas.height
+        const oldWidth = canvas.width
+        const oldHeight = canvas.height
         canvas.width = oldWidth * ratio
         canvas.height = oldHeight * ratio
         canvas.style.width = oldWidth + 'px'
@@ -709,8 +709,8 @@ export default {
       })
     },
     put () {
-      var canvas = document.getElementById('tutorial')
-      var dataURL = canvas.toDataURL('image/png', 1.0)
+      const canvas = document.getElementById('tutorial')
+      const dataURL = canvas.toDataURL('image/png', 1.0)
       // this.resultImg.crossOrigin  = 'anonymous'
       this.resultImg = dataURL
       // this.resultImg.style = `
@@ -809,7 +809,7 @@ export default {
                 is_check: true
               }, (data) => {
                 if (/^(200|212)$/.test(data.res.code)) {
-                  this.$router.push(`/account/create_order?groupon_no=new`)
+                  this.$router.push('/account/create_order?groupon_no=new')
                 }
               }
             )
@@ -822,8 +822,8 @@ export default {
       this.moreTuan = true
     },
     setCookie (name, value) {
-      var Days = 30
-      var exp = new Date()
+      const Days = 30
+      const exp = new Date()
       exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000)
       document.cookie = name + '=' + escape(value) + ';expires=' + exp.toGMTString() + ';path=/'
     },
@@ -836,7 +836,7 @@ export default {
     },
     FnSpread () {
       // let tit = document.querySelector('.mob-tuan-tit')
-      let ulHeight = document.querySelector('.mob-tuan-ul')
+      const ulHeight = document.querySelector('.mob-tuan-ul')
       let height = ulHeight.getBoundingClientRect().height
       let f
       window.console.log(f)
@@ -896,13 +896,13 @@ export default {
   position: absolute;
   right: 20px;
   top: 40px;
-  content:url('');
+  content: '';
 }
 .s-group .goods.fail-test ::after{
   position: absolute;
   right: 20px;
   top: 40px;
-  content:url('');
+  content: '';
 }
 .s-group .pic{
   display: table-cell;

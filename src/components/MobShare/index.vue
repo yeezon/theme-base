@@ -56,9 +56,6 @@ export default {
   },
   watch: {
     value (val) {
-      if (val) {
-
-      }
       this.onPop = val
     }
   },

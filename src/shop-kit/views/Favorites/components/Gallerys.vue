@@ -23,7 +23,7 @@
 
 <script>
 function getImagePosts (style) {
-  return window.fetch(`/api/v1/image-posts/favorites`, {
+  return window.fetch('/api/v1/image-posts/favorites', {
     credentials: 'include'
   })
 }
@@ -51,7 +51,7 @@ export default {
       })
     },
     deleteFn (id, index) {
-      let _this = this
+      const _this = this
       window.fetch(`/api/v1/image-posts/favorites?id=${id}`, {
         method: 'DELETE',
         headers: {

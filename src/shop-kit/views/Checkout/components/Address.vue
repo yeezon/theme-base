@@ -92,7 +92,7 @@ export default {
       const _addresses = this.addresses || []
 
       if (oNewAddress.id) {
-        for (var i = _addresses.length - 1; i >= 0; i--) {
+        for (let i = _addresses.length - 1; i >= 0; i--) {
           const _oAddress = _addresses[i] || {}
 
           if (_oAddress.id === oNewAddress.id) {
@@ -110,7 +110,7 @@ export default {
       let nMarkIndex = null
       const _addresses = this.addresses || []
 
-      for (var i = _addresses.length - 1; i >= 0; i--) {
+      for (let i = _addresses.length - 1; i >= 0; i--) {
         const _oAddress = _addresses[i] || {}
 
         if (_oAddress.id === nID) {
@@ -138,7 +138,7 @@ export default {
       const _oAddress = JSON.parse(JSON.stringify(oAddress || {}))
       this.$emit('input', _oAddress)
 
-      this.addresses.unshift(_oAddress)
+      // this.addresses.unshift(_oAddress)
 
       this.fnClose()
     }

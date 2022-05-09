@@ -55,7 +55,7 @@ function getMoreComment (id, lastId) {
   })
 }
 function getSetting () {
-  return window.fetch(`/api/v1/topic-votes/comments/setting`, {
+  return window.fetch('/api/v1/topic-votes/comments/setting', {
     credentials: 'include'
   })
 }
@@ -102,7 +102,7 @@ export default {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
-          let _data = res.msg.results
+          const _data = res.msg.results
           this.minLength = _data.min_content_length
           this.isShowComment = _data.enable_option
           this.isReviewComment = _data.enable_review
@@ -112,8 +112,8 @@ export default {
     },
     fnPk (value) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/topic-votes/create`, {
+      const _this = this
+      window.fetch('/api/v1/topic-votes/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -150,9 +150,9 @@ export default {
           _index = index
         }
       })
-      let _this = this
+      const _this = this
       if (_index || _index === 0) {
-        window.fetch(`/api/v1/topic-votes/create`, {
+        window.fetch('/api/v1/topic-votes/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -180,8 +180,8 @@ export default {
     },
     fnPublish (comment) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/topic-votes/comments`, {
+      const _this = this
+      window.fetch('/api/v1/topic-votes/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -195,7 +195,7 @@ export default {
         return oRes.json()
       }).then(function (oData) {
         if ((oData || {}).code === 200) {
-          let inputData = {
+          const inputData = {
             customer: {
               avatar: {
                 src: _this.$store.state.account.oInfo.avatar_url
@@ -234,7 +234,7 @@ export default {
       })
     },
     fnZan (item) {
-      window.fetch(`/api/v1/topic-votes/comments/likes`, {
+      window.fetch('/api/v1/topic-votes/comments/likes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

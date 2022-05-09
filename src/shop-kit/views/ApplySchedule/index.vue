@@ -5,13 +5,19 @@
 
     <div class="s-schedule-cont">
       <div class="s-title">
-        <span class="s-title_text">售后进度</span>
-        <su-button v-if="info.trade_after_sale && (info.trade_after_sale.current_status === 0 || info.trade_after_sale.current_status === 10 || info.trade_after_sale.current_status === 20)" class="s-cancel-btn" size="small" type="primary" @click="fnCancelApply">取消申请</su-button>
-        <select v-if="info.trade_after_sale && (info.trade_after_sale.current_status === 11 || info.trade_after_sale.current_status === 21)" class="s-select" @change="fnShipmentChange">
+        <div class="sale-status">
+          <p>{{statusText.text}}</p>
+          <span class="sale-status-desc" v-if="statusText.desc">{{statusText.desc}}</span>
+        </div>
+        <!-- <span class="s-title_text">售后进度</span> -->
+        <div class="btn-wrap">
+          <su-button v-if="info.trade_after_sale && (info.trade_after_sale.current_status === 0 || info.trade_after_sale.current_status === 10 || info.trade_after_sale.current_status === 20)" class="s-cancel-btn" size="small" type="primary" @click="fnCancelApply">取消申请</su-button>
+        </div>
+        <select v-if="info.trade_after_sale && (info.trade_after_sale.current_status === 11 || info.trade_after_sale.current_status === 21) && info.trade_after_sale.status != 5" class="s-select" @change="fnShipmentChange">
           <option value="">请选择快递公司</option>
           <option v-for="(shipment, index) in shipments" :key="index" :value="shipment">{{shipment}}</option>
         </select>
-        <su-input v-if="info.trade_after_sale && (info.trade_after_sale.current_status === 11 || info.trade_after_sale.current_status === 21)" v-model="shipmentNo" placeholder="请输入快递单号" size="mini" class="s-input">
+        <su-input v-if="info.trade_after_sale && (info.trade_after_sale.current_status === 11 || info.trade_after_sale.current_status === 21) && info.trade_after_sale.status != 5" v-model="shipmentNo" placeholder="请输入快递单号" size="mini" class="s-input">
           <su-button slot="append" @click="fnUpdateShip">确定</su-button>
         </su-input>
         <su-button v-if="info.trade_after_sale && info.trade_after_sale.current_status === 24" class="s-cancel-btn" size="small" type="primary" @click="fnConfirmShip">确认收货</su-button>
@@ -108,6 +114,178 @@ export default {
           break
       }
       return type
+    },
+    statusText () {
+      const statusMap = {
+        // after_sale_type ： 0 => 退款 1=>退货退款 2=>换货
+
+        // current_status
+        // # 0 买家发起退款申请
+        // # 1 商家同意退款，退款中
+        // # 2 系统退款成功
+        // # 3 商家拒绝退款申请
+        // # 4 系统退款失败
+        // # 5 系统超时关闭
+
+        // # 10 买家发起退货退款申请，待商家处理
+        // # 11 商家同意退货退款，待买家发货
+        // # 12 买家已发货，待商家收货
+        // # 13 商家已收货，退款中
+        // # 14 系统退款成功
+        // # 15 商家拒绝申请
+        // # 16 系统退款失败
+        // # 17 系统超时关闭
+
+        // # 20 买家发起换货申请，待商家处理
+        // # 21 商家同意换货，待买家发货
+        // # 22 买家已发货，待商家收货
+        // # 23 商家已收货，待商家发货
+        // # 24 商家已发货，待买家收货
+        // # 25 买家收货，换货成功
+        // # 26 商家家拒绝换货
+        // # 27 商家未收到货，关闭申请
+        // # 28 系统超时关闭
+
+        // # 98 系统超时关闭
+        // # 99 买家取消售后
+
+        // after_sale_type 0 => 退款
+        0: {
+          // 买家发起退款申请
+          0: {
+            text: '您已成功发起退款申请，请耐心等待商家处理',
+            desc: '商家同意后，系统将退款给您'
+          },
+          // 商家同意退款，退款中
+          1: {
+            text: '商家已同意退款，等待系统退款'
+          },
+          // 系统退款成功
+          2: {
+            text: '退款成功'
+          },
+          // 商家拒绝退款申请
+          3: {
+            text: '商家拒绝退款申请'
+          },
+          // 系统退款失败
+          16: {
+            text: '系统退款失败，请联系商家处理'
+          },
+          // 系统超时关闭
+          17: {
+            text: '商家长时间未处理，退款申请已自动关闭'
+          },
+          // 买家取消售后
+          99: {
+            text: '退款关闭'
+          }
+        },
+        // after_sale_type 1 => 退货退款
+        1: {
+          // 买家发起退货申请，待商家处理
+          10: {
+            text: '您已成功发起退货申请，请耐心等待商家处理',
+            desc: '商家同意后，请按照给出的退货地址退货'
+          },
+          // 商家同意退回退款，待买家发货
+          11: {
+            text: '商家同意退货退款，请尽快退回商品',
+            desc: '超过14天未退回商品，系统将自动默认退货申请不成功'
+          },
+          // 买家已发货，待商家收货
+          12: {
+            text: '您已退回货物，请耐心等待商家处理',
+            desc: '商家同意后，系统将自动进行全额退款'
+          },
+          // 商家已收货，退款中
+          13: {
+            text: '商家已确认收货，等待系统退款'
+          },
+          // 系统退款成功
+          14: {
+            text: '退款成功'
+          },
+          // 商家拒绝申请
+          15: {
+            text: '商家拒绝退货退款申请'
+          },
+          // 系统退款失败
+          16: {
+            text: '系统退款失败，请联系商家处理'
+          },
+          // 系统超时关闭
+          17: {
+            text: '商家长时间未处理，退货退款申请已自动关闭'
+          },
+          // 买家取消售后
+          99: {
+            text: '退货退款关闭'
+          }
+        },
+        // after_sale_type 2 => 换货
+        2: {
+          //  买家发起换货申请，待商家处理
+          20: {
+            text: '您已成功发起换货申请，请耐心等待商家处理',
+            desc: '商家同意后，请按照给出的换货地址换货'
+          },
+          // 商家同意换货，待买家发货
+          21: {
+            text: '商家同意换货，请尽快退回商品',
+            desc: '超过14天未退回商品，系统将自动默认换货申请不成功'
+          },
+          // 买家已发货，待商家收货
+          22: {
+            text: '您已退回货物，请耐心等待商家处理',
+            desc: '商家确认收货后，将重新发货给您'
+          },
+          // 买家已发货，待商家发货
+          23: {
+            text: '您已退回货物，请耐心等待商家处理',
+            desc: '商家确认收货后，将重新发货给您'
+          },
+          // 买家已发货，待买家收货
+          24: {
+            text: '商家已发货'
+          },
+          // 买家收货，换货成功
+          25: {
+            text: '换货成功'
+          },
+          // 商家拒绝换货
+          26: {
+            text: '商家拒绝换货申请'
+          },
+          // 商家未收到货，关闭申请
+          27: {
+            text: '商家拒绝换货申请'
+          },
+          // 系统超时关闭
+          28: {
+            text: '商家长时间未处理，换货申请已自动关闭'
+          },
+          99: {
+            text: '换货关闭'
+          }
+        }
+      }
+      const data = {
+        text: '售后进度'
+      }
+      if (this.info.trade_after_sale) {
+        const afterSaleType = this.info.trade_after_sale.after_sale_type
+        const status = this.info.trade_after_sale.current_status
+
+        if (!isNaN(afterSaleType) && !isNaN(status)) {
+          if (statusMap[afterSaleType] && statusMap[afterSaleType][status]) {
+            data.text = statusMap[afterSaleType][status].text
+            data.desc = statusMap[afterSaleType][status].desc || ''
+          }
+        }
+      }
+
+      return data
     }
   },
   created () {
@@ -144,7 +322,7 @@ export default {
     fnConfirmShip () {
       this.$confirm({
         title: '确认收货',
-        msg: `确认是否收到商品？`
+        msg: '确认是否收到商品？'
       }).then(() => {
         this.$sdk.service.update({ id: this.trade_after_sale_id, action: 'recive' }, ({ res }) => {
           console.log(res)
@@ -207,6 +385,18 @@ export default {
   padding: 20px 30px;
   border-bottom: 1px solid #ddd;
   background: #fff;
+  justify-content: space-between;
+}
+.sale-status {
+  font-size: 24px;
+
+}
+.sale-status p {
+  margin: 0;
+}
+.sale-status-desc {
+  font-size: 14px;
+  color: #999;
 }
 .s-title_text {
   flex: 1;
@@ -283,9 +473,23 @@ export default {
   .s-title_text {
     font-size: 18px;
   }
+  .sale-status {
+    font-size: 15px;
+    margin: 0;
+  }
+  .sale-status-desc {
+    font-size: 14px;
+    color: #999;
+  }
+  .btn-wrap {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: 10px;
+  }
   .s-title /deep/ .s-cancel-btn {
-    position: absolute;
-    right: 20px;
+    /* position: absolute; */
+    /* right: 20px; */
   }
   .s-select {
     margin: 10px 0;

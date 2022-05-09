@@ -5,7 +5,7 @@
         <swiper-slide
           v-for="(item, index) in newImages"
           :key="index"
-          :style="{backgroundImage:`url(${item.src}`}"
+          :style="{backgroundImage:`url('${item.src}')`}"
           @click.native="fnLink"
         ></swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
@@ -20,7 +20,7 @@
         <swiper-slide
           v-for="(item, index) in newImages"
           :key="index"
-          :style="{backgroundImage:`url(${item.src}`}"
+          :style="{backgroundImage:`url('${item.src}')`}"
         ></swiper-slide>
       </swiper>
     </div>
@@ -30,7 +30,7 @@
           class="swiper-mob-slide"
           v-for="(item, index) in newImages"
           :key="index"
-          :style="{backgroundImage:`url(${item.src})`}"
+          :style="{backgroundImage:`url('${item.src}')`}"
           @click.native="fnMobOpen(index)"
           >
         </swiper-slide>

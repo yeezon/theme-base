@@ -7,6 +7,7 @@ import DiscountTemp from './Discount'
 import CommentsPlugin from './Comments/Plugin'
 import Back from './Back'
 import WeappContact from './WeappContact'
+import WeappLiveNow from './WeappLiveNow'
 
 import ProductInfoPintuanJoin from './Product/Info/components/PinTuan/components/Join.vue'
 import ProductInfoPinDetail from './Product/Info/components/PinTuan/components/PinDetail.vue'
@@ -18,6 +19,7 @@ import ApplySale from './ApplySale'
 
 import PostComment from './PostComment'
 import BlogComment from './BlogComment'
+import ProductDetailComment from './ProductDetailComment'
 
 export default {
   SkuOptions,
@@ -33,7 +35,9 @@ export default {
   ApplySale,
   PostComment,
   BlogComment,
+  ProductDetailComment,
   ProductRecommend,
   Back,
-  WeappContact
+  WeappContact,
+  WeappLiveNow
 }

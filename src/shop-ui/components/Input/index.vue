@@ -283,7 +283,7 @@ export default {
       }
     },
     calcIconOffset (place) {
-      let elList = [].slice.call(this.$el.querySelectorAll(`.su-input__${place}`) || [])
+      const elList = [].slice.call(this.$el.querySelectorAll(`.su-input__${place}`) || [])
       if (!elList.length) return
       let el = null
       for (let i = 0; i < elList.length; i++) {

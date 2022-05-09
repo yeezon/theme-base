@@ -287,9 +287,9 @@ export default {
         // 不兼容预览的浏览器
         self.avatar_url = ''
       } else {
-        var img = event.target.files[0]
+        const img = event.target.files[0]
         self.localImgName = img.name
-        var reader = new FileReader()
+        const reader = new FileReader()
         reader.onload = (function (file) {
           return function (evt) {
             self.avatar_url = evt.target.result
@@ -303,8 +303,8 @@ export default {
       this.avatarModifyDialog = false
       if (!this.avatarChangeStatus) return
 
-      let formData = new FormData()
-      let file = this.$refs.file.files[0]
+      const formData = new FormData()
+      const file = this.$refs.file.files[0]
       formData.append('avatar', file)
 
       window.fetch('/account/upload_avatar', {
@@ -330,7 +330,7 @@ export default {
     iframeLoad: function (e) {
       const self = this
       if (!self.avatarChangeStatus) return
-      let progressInter = setInterval(function () {
+      const progressInter = setInterval(function () {
         if (self.imgLoadProgress > 100) {
           clearInterval(progressInter)
           self.getPersonalInfo()
@@ -383,6 +383,8 @@ export default {
           if (res.code === 200) {
             this.modifyDialog = false
             this.getPersonalInfo()
+          } else if (res.code === 201 && res.msg) {
+            this.$toast.info(res.msg.desc || '未知错误') // 兼容脱敏检测错误反馈
           } else {
             this.$confirm({
               title: '修改个人资料',

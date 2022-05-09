@@ -43,7 +43,8 @@ export default {
       total_page: 1,
       page: 1,
       by: '',
-      stock: ''
+      stock: '',
+      loadingData: false
     }
   },
   created () {
@@ -95,7 +96,11 @@ export default {
         if (isEnd || this.c_id === 10) {
           return
         }
-        if (document.documentElement.scrollHeight - document.documentElement.clientHeight - document.documentElement.scrollTop < 200) {
+        const el = document.documentElement
+        const top = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset
+        if (el.scrollHeight - el.clientHeight - top < 200) {
+          if (this.loadingData) return
+          this.loadingData = true
           this.page++
           if (this.page > this.total_page) {
             isEnd = true
@@ -105,6 +110,8 @@ export default {
             return oRes.json()
           }).then(res => {
             this.products = this.products.concat(res.msg.results.products)
+          }).finally(() => {
+            this.loadingData = false
           })
           // getDiscount(this.page).then(({data: res}) => {
           //   this.products = this.products.concat(res.msg.results.products)

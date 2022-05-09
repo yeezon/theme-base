@@ -144,8 +144,8 @@ export default {
       return this.$sdk.util.getImageUrl(id, name, size, epoch)
     },
     FnSelect () {
-      let _key = arguments[0][0]
-      let _select = arguments[0][1]
+      const _key = arguments[0][0]
+      const _select = arguments[0][1]
       if (_key === 1) {
         this.asindex = _select
       } else if (_key === 2) {
@@ -156,20 +156,20 @@ export default {
     },
     FnUpload () {
       // console.log('正在上传')
-      let file = this.$refs.file.files[0]
-      let reader = new FileReader()
+      const file = this.$refs.file.files[0]
+      const reader = new FileReader()
       reader.readAsDataURL(file)
       this.images.push({
         url: '',
         id: ''
       })
       reader.onload = (e) => {
-        let image = new Image()
+        const image = new Image()
         image.src = e.target.result
-        let _this = this
+        const _this = this
         image.onload = function () {
           // console.log('图片的宽度为' + this.width + ',长度为' + this.height)
-          window.fetch(`/api/v1/comment/upload_image`, {
+          window.fetch('/api/v1/comment/upload_image', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -235,13 +235,13 @@ export default {
     FnSumit () {
       this.isShowErr = true
       if (this.canSubmit) {
-        let commentImageArray = []
+        const commentImageArray = []
         if (this.images.length) {
           for (const item of this.images) {
             commentImageArray.push(item.id)
           }
         }
-        let sendDate = {
+        const sendDate = {
           comment_image_array: commentImageArray,
           content: this.comment,
           logistics_level: this.asindex,
@@ -250,8 +250,8 @@ export default {
           trade_id: this.id,
           variant_id: this.item.variant_id
         }
-        let _this = this
-        window.fetch(`/api/v1/comment/create`, {
+        const _this = this
+        window.fetch('/api/v1/comment/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -79,7 +79,7 @@
       <div v-if="order.address" class="s-address">
         <div><span class="left">收货姓名：</span><span class="right">{{order.address.name}}</span></div>
         <div><span class="left">联系电话：</span><span class="right">{{(order.address.mobile || order.address.phone).replace(/(\d{3})\d{4}(\d+)/, '$1****$2') || '-'}}</span></div>
-        <div><span class="left">配送地址：</span><span class="right">{{order.address.areas[0].name}} {{order.address.areas[1].name}} {{order.address.areas[2].name}} {{order.address.detail}}</span></div>
+        <div><span class="left">配送地址：</span><span class="right">{{(order.address.areas[0] || {}).name || ''}} {{(order.address.areas[1] || {}).name || ''}} {{(order.address.areas[2] || {}).name || ''}} {{order.address.detail}}</span></div>
       </div>
     </div>
 
@@ -762,7 +762,7 @@ export default {
           this.$router.push('/account/orders')
         }
         //
-        let dd = Math.floor(nLeft / 86400000)
+        const dd = Math.floor(nLeft / 86400000)
         let hh = Math.floor(nLeft / 3600000)
         let mm = Math.floor((nLeft % 3600000) / 60000)
         let ss = Math.floor(((nLeft % 3600000) % 60000) / 1000)

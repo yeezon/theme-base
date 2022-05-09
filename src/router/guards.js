@@ -1,4 +1,6 @@
 
+// 强制加上登录鉴权
+
 import store from '@/store'
 
 export function beforeEach (to, from, next) {

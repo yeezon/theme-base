@@ -98,7 +98,7 @@ export default {
       data => {
         if (data.res.code === CodeOk) {
           const shipments = data.res.shipments || []
-          let oData = []
+          const oData = []
           if (shipments.length) {
             shipments.forEach((shipment) => {
               shipment.items.forEach((item) => {
@@ -199,7 +199,7 @@ export default {
       return this.$sdk.util.getImageUrl(id, name, size, epoch)
     },
     FnNext () {
-      let selectItem = []
+      const selectItem = []
       this.orderData.forEach((items, index) => {
         for (const item of items.items) {
           if (items.support_this_service) {

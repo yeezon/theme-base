@@ -29,7 +29,7 @@
                 v-for="(image, index) in item.images.slice(0,6)"
                 :key="index"
                 @click.stop="FnOpen([item, index])"
-                :style="{backgroundImage:`url(${image.src})`}"
+                :style="{backgroundImage:`url(${getImg(image.src, 280)})`}"
                 >
                 </li>
               </ul>
@@ -42,7 +42,7 @@
       <div class="empty" v-else>
         暂无图集
       </div>
-      <tu-paginate-lite v-if="imagePosts.length" :paging="config.page" :total="total" @change="handlePage"></tu-paginate-lite>
+      <tu-paginate-lite v-if="imagePosts.length" :page="config.page" :total="total" @change="handlePage"></tu-paginate-lite>
     </div>
   </div>
 </template>
@@ -51,13 +51,14 @@
 import GallerySlideItem from './components/GallerySlideItem'
 import GalleryInfo from './components/GalleryInfo'
 import GallerySlideMask from './components/GallerySlideMask'
+import Vue from 'vue'
 function getImagePosts ({ size, page, style }) {
   return window.fetch(`/api/v1/image-posts?style=${style}&size=${size}&page=${page}`, {
     credentials: 'include'
   })
 }
 function getSetting () {
-  return window.fetch(`/api/v1/image-posts/comments/setting`, {
+  return window.fetch('/api/v1/image-posts/comments/setting', {
     credentials: 'include'
   })
 }
@@ -70,7 +71,7 @@ export default {
       total: 1,
       config: {
         style: 0,
-        size: 20,
+        size: 2,
         page: 1
       },
       nWidth: document.documentElement.clientWidth || document.body.clientWidth,
@@ -95,6 +96,7 @@ export default {
           this.total = res.msg.paging.pages
           this.paging = res.msg.paging
           this.galleryLoading = false
+          this.config.page = res.msg.paging.view
           this.imagePosts = res.msg.results.items || []
         }
       })
@@ -102,7 +104,7 @@ export default {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
-          let _data = res.msg.results
+          const _data = res.msg.results
           this.isShowComment = _data.enable_option
         }
       })
@@ -120,6 +122,12 @@ export default {
     },
     handlePage (index) {
       this.config.page = index
+    },
+    getImg (url, width = '280', height = width) {
+      if (url) {
+        url = Vue.filter('imgURL')(url, width + 'x' + height)
+      }
+      return url
     }
   },
   watch: {

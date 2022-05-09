@@ -45,7 +45,7 @@
 // import 'swiper/dist/css/swiper.css' // import 会污染全局，style scoped src 会无效，改到全局的 styles 引入修正后的 swiper.css
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 function getProducts () {
-  return window.fetch(`/api/v1/marketing/point-exchanges?size=99999`, {
+  return window.fetch('/api/v1/marketing/point-exchanges?size=99999', {
     credentials: 'include'
   })
 }

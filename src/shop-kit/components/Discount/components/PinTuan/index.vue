@@ -25,7 +25,7 @@
         <div class="act-mob">
           <div class="act-top">
             <h5 class="act-name">{{item.name}}</h5>
-            <div class="act-desc">{{item.short_desc}}</div>
+            <div class="act-desc">{{fnDescHandle(item.short_desc)}}</div>
           </div>
           <div class="act-btm">
             <div class="act-price">
@@ -101,7 +101,7 @@ export default {
                 }
               }).done(function (res) {
                 if (res.code === 200) {
-                  var fnShare = function () {
+                  const fnShare = function () {
                     // 留给后面做特殊处理
                     return window.yhsdWxShare.info
                   }
@@ -149,6 +149,10 @@ export default {
     },
     FnEnd () {
       this.$emit('end')
+    },
+    // 处理描述换行
+    fnDescHandle (desc) {
+      return (desc || '').replace(/<br\/>/gi, '\n')
     }
   },
   components: {

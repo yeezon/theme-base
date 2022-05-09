@@ -42,7 +42,7 @@ function getVotes ({ size, page }) {
   })
 }
 function getSetting () {
-  return window.fetch(`/api/v1/topic-votes/comments/setting`, {
+  return window.fetch('/api/v1/topic-votes/comments/setting', {
     credentials: 'include'
   })
 }
@@ -86,7 +86,7 @@ export default {
         return oRes.json()
       }).then(res => {
         if (res.code === 200) {
-          let _data = res.msg.results
+          const _data = res.msg.results
           this.isShowComment = _data.enable_option
         }
       })
@@ -101,7 +101,7 @@ export default {
       })
 
       if (_index || _index === 0) {
-        window.fetch(`/api/v1/topic-votes/create`, {
+        window.fetch('/api/v1/topic-votes/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -130,7 +130,7 @@ export default {
     },
     fnPk (value, item) {
       this.fnJudgeSign()
-      window.fetch(`/api/v1/topic-votes/create`, {
+      window.fetch('/api/v1/topic-votes/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

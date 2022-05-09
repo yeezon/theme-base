@@ -209,6 +209,8 @@ export default {
             if (data.res.code === 200) {
               // Metas
               _oAddress = JSON.parse(JSON.stringify(this.oFormData || {}))
+            } else if (data.res.code === 201 && data.res.msg) {
+              err = data.res.msg.desc || '未知错误' // 兼容脱敏检测错误反馈 // 兼容脱敏检测错误反馈
             } else {
               err = data.res.message || '地址操作不成功'
             }
@@ -233,6 +235,8 @@ export default {
               // Metas
               _oAddress = JSON.parse(JSON.stringify(this.oFormData || {}))
               _oAddress.id = _nID
+            } else if (data.res.code === 201 && data.res.msg) {
+              err = data.res.msg.desc || '未知错误' // 兼容脱敏检测错误反馈
             } else {
               err = data.res.message || '地址操作不成功'
             }

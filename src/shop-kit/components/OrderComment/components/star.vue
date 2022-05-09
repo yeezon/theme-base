@@ -62,7 +62,7 @@ export default {
         this.$refs.star.forEach((item) => {
           item.className = 's-user-a'
         })
-        let _star = this.$refs.star[index - 1]
+        const _star = this.$refs.star[index - 1]
         this.addClass(_star, 'big')
       }
     },
@@ -73,14 +73,14 @@ export default {
       this.hoverIndex = this.asindex
     },
     hasClass (el, className) {
-      let reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
+      const reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
       return reg.test(el.className)
     },
     addClass (el, className) {
       if (this.hasClass(el, className)) {
         return
       }
-      let newClass = el.className.split(' ')
+      const newClass = el.className.split(' ')
       newClass.push(className)
       el.className = newClass.join(' ')
     }

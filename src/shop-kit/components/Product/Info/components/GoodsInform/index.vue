@@ -10,7 +10,7 @@ export default {
     FnInform () {
       if (!(window.$account || {}).id) {
         this.$sdk.util.setCookie('redirect_back_url', window.location.href)
-        this.$router.push(`/account/login`)
+        this.$router.push('/account/login')
       } else {
         this.$emit('goods-inform')
       }

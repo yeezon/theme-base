@@ -60,7 +60,7 @@ export default function calcTextareaHeight (
     document.body.appendChild(hiddenTextarea)
   }
 
-  let {
+  const {
     paddingSize,
     borderSize,
     boxSizing,
@@ -80,7 +80,7 @@ export default function calcTextareaHeight (
   }
 
   hiddenTextarea.value = ''
-  let singleRowHeight = hiddenTextarea.scrollHeight - paddingSize
+  const singleRowHeight = hiddenTextarea.scrollHeight - paddingSize
 
   if (minRows !== null) {
     let minHeight = singleRowHeight * minRows

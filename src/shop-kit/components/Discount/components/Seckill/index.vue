@@ -19,8 +19,8 @@
           </div>
         </div>
       <div class="pro-seckill">
-        <ul class="pro-seckill-ul" v-if="products.length">
-          <li v-for="(item, index) in products" :key="index">
+        <ul class="pro-seckill-ul" v-if="productList.length">
+          <li v-for="(item, index) in productList" :key="index">
             <div class="act-list">
               <a :href="item.page_url" target="_blank" class="act-list-img">
                 <img :src="item.src" :alt="item.image_alt">
@@ -32,7 +32,7 @@
               <div class="act-mob">
                 <a :href="item.page_url" target="_blank" class="act-list-link">
                   <h4>{{item.name}}</h4>
-                  <span class="desc" v-if="item.short_desc">{{item.short_desc}}</span>
+                  <span class="desc" v-if="item.short_desc">{{fnDescHandle(item.short_desc)}}</span>
                 </a>
                 <div class="act-con" target="_blank" v-if="item.stock_progress && !now">
                   <i class="act-progress" style="color:red">
@@ -69,6 +69,9 @@ import { timestampToTime, countTime } from '@/shop-kit/utils'
 
 export default {
   name: 'SkSeckill',
+  components: {
+    CountDown
+  },
   props: ['marketing', 'products'],
   data () {
     return {
@@ -92,19 +95,39 @@ export default {
       },
       err_mob: '',
       err_mobile: '',
-      total_page: ''
+      total_page: '',
+      productList: []
+    }
+  },
+  watch: {
+    products (val) {
+      this.setProductList(val)
+
+      this.getseckill()
+    },
+    marketing () {
+      this.getseckill()
     }
   },
   created () {
     this.getseckill()
+
     if (this.endTime < this.nowTime) {
       this.seckillEnd()
     }
+
+    this.setProductList(this.products)
   },
   methods: {
+    setProductList (val) {
+      try {
+        this.productList = JSON.parse(JSON.stringify(val || []))
+      } catch (error) {
+        this.productList = []
+      }
+    },
     getseckill () {
       const results = this.marketing.results || {}
-      this.products = this.products || []
       const mInfo = results.info || {}
 
       this.oInfo = results.info || {}
@@ -119,7 +142,7 @@ export default {
       }
       this.reserve = mInfo.reserve_enable
       this.total_page = this.marketing.total_page
-      this.products.forEach((item) => {
+      this.productList.forEach((item) => {
         if (item.date_sell_out) {
           item.sellouttime = countTime(mInfo.start_at, item.date_sell_out)
         }
@@ -150,7 +173,7 @@ export default {
                 }
               }).done(function (res) {
                 if (res.code === 200) {
-                  var fnShare = function () {
+                  const fnShare = function () {
                     // 留给后面做特殊处理
                     return window.yhsdWxShare.info
                   }
@@ -197,7 +220,7 @@ export default {
       const _discountHandle = window.location.pathname.split('/discounts/')[1] || ''
 
       if (_handle && _discountHandle && nMpID) {
-        let cont = window.prompt('请输入手机号', '')
+        const cont = window.prompt('请输入手机号', '')
 
         if (this.$sdk.util.isMobile(cont)) {
           window.fetch(`/api/v1/marketing/${_discountHandle}/reserves`, {
@@ -235,18 +258,11 @@ export default {
     },
     seckillEnd () {
       this.$emit('end')
-    }
-  },
-  watch: {
-    marketing () {
-      this.getseckill()
     },
-    products () {
-      this.getseckill()
+    // 处理描述换行
+    fnDescHandle (desc) {
+      return (desc || '').replace(/<br\/>/gi, '\n')
     }
-  },
-  components: {
-    CountDown
   }
 }
 </script>

@@ -24,7 +24,7 @@
 export default {
   name: 'SkResetPassword',
   data () {
-    var validatePassword = (rule, value, callback) => {
+    const validatePassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('密码不能为空'))
       } else if (value.length < 6) {
@@ -36,7 +36,7 @@ export default {
         callback()
       }
     }
-    var validatePasswordAgain = (rule, value, callback) => {
+    const validatePasswordAgain = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('确认密码不能为空'))
       } else if (value !== this.user.password) {

@@ -95,8 +95,8 @@ export default {
   methods: {
     fnFavor (item) {
       this.fnJudgeSign()
-      let _this = this
-      window.fetch(`/api/v1/image-posts/favorites`, {
+      const _this = this
+      window.fetch('/api/v1/image-posts/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ export default {
       })
     },
     fnFavorOut (item) {
-      let _this = this
+      const _this = this
       window.fetch(`/api/v1/image-posts/favorites?id=${item.id}`, {
         method: 'DELETE',
         headers: {

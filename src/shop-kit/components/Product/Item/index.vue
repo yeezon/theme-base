@@ -8,7 +8,7 @@
 <router-link class="product-item" :to="`/products/${ item.handle }`">
   <div class="img" :style="{ backgroundImage: `url(${ getImg((item.feature_image || {}).src || item.src) })` }"></div>
   <div class="info">
-    <div class="desc">{{ item.short_desc }}</div>
+    <div class="desc">{{ fnDescHandle(item.short_desc) }}</div>
     <div class="name">{{ item.name }}</div>
     <div class="sale">
       <div class="prices">
@@ -76,8 +76,8 @@ export default {
     getDiscount () {
       // 营销活动支持
       if ('IntersectionObserver' in window) {
-        var fnDiscount = () => {
-          var _handle = (this.item || {}).handle || ''
+        const fnDiscount = () => {
+          const _handle = (this.item || {}).handle || ''
 
           if (!_handle) return
 
@@ -85,15 +85,15 @@ export default {
             oRes = oRes.res || {}
 
             if (oRes.code === 200) {
-              var nDisType = null
-              var nEventPrice = null
-              var nOriginPrice = null
+              let nDisType = null
+              let nEventPrice = null
+              let nOriginPrice = null
 
-              var _eventSkus = (oRes.marketing || {}).variants || []
-              var _discounts = oRes.discounts || []
+              const _eventSkus = (oRes.marketing || {}).variants || []
+              const _discounts = oRes.discounts || []
 
-              for (var i = 0; i < _eventSkus.length; ++i) {
-                var oEventSku = _eventSkus[i] || {}
+              for (let i = 0; i < _eventSkus.length; ++i) {
+                const oEventSku = _eventSkus[i] || {}
                 // 1 秒杀，2 限时，3 拼团，10 预售
                 nDisType = oEventSku.c_id
                 if (/^(1|2|3|10)$/ig.test(nDisType)) {
@@ -103,7 +103,7 @@ export default {
                 }
               }
 
-              var priceTag = ''
+              let priceTag = ''
               if (nDisType === 1) {
                 priceTag = '秒杀'
               } else if (nDisType === 2) {
@@ -112,8 +112,8 @@ export default {
                 priceTag = '拼团'
               } else {
                 // 旧活动
-                for (var _i = 0; _i < _discounts.length; ++_i) {
-                  var _oDis = _discounts[_i] || {}
+                for (let _i = 0; _i < _discounts.length; ++_i) {
+                  const _oDis = _discounts[_i] || {}
 
                   if (_oDis.discount_type === 'amount_off') {
                     priceTag = '满减'
@@ -138,10 +138,10 @@ export default {
           })
         }
 
-        var io = new IntersectionObserver(function (entries) {
+        const io = new IntersectionObserver(function (entries) {
           entries.forEach(oEntrie => {
             if (oEntrie.intersectionRatio > 0) {
-              var el = oEntrie.target
+              const el = oEntrie.target
               fnDiscount()
               io.unobserve(el) // 停止观察
             }
@@ -150,6 +150,10 @@ export default {
 
         io.observe(this.$el)
       }
+    },
+    // 处理描述换行
+    fnDescHandle (desc) {
+      return (desc || '').replace(/<br\/>/gi, '\n')
     }
   }
 }

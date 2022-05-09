@@ -157,8 +157,8 @@ export default {
     },
     oTotalPoint () {
       let _totalPoint = 0
-      let _oDiscountSkuMap = this.oDiscountSkuMap
-      for (let item in _oDiscountSkuMap) {
+      const _oDiscountSkuMap = this.oDiscountSkuMap
+      for (const item in _oDiscountSkuMap) {
         _totalPoint += _oDiscountSkuMap[item].point_price * _oDiscountSkuMap[item].quantity
       }
       return _totalPoint
@@ -378,7 +378,7 @@ export default {
           let err = null
           if (data && data.res) {
             if (data.res.code === 200) {
-              let ship = data.res.shipments || []
+              const ship = data.res.shipments || []
               if (ship.length) {
                 this.shipments = ship
               } else {
@@ -597,8 +597,8 @@ export default {
       let err = null
       const items = this.oCart.items || []
       for (const oItem of items) {
-        if (!oItem.available && oItem.is_check) {
-          err = oItem.reason || '存在无效但被勾选的商品'
+        if (oItem.is_check && !oItem.available) {
+          err = oItem.reason || '您选择的商品已失效，请返回购物车确认'
           break
         }
       }
@@ -826,7 +826,7 @@ export default {
       return res
     },
     fnPreRemarks (oOrder) {
-      let res = true
+      const res = true
       const remarks = this.remarksData
       if (remarks) {
         oOrder.remark = remarks
@@ -834,7 +834,7 @@ export default {
       return res
     },
     fnPreCoupon (oOrder) {
-      let res = true
+      const res = true
       const oCoupon = this.oCouponData
       if (oCoupon.code) {
         oOrder.coupon_code = oCoupon.code
@@ -842,7 +842,7 @@ export default {
       return res
     },
     fnPrePoint (oOrder) {
-      let res = true
+      const res = true
       const _oRes = this.oSum.oRes
       if (this.oDiscount.reward_point_enabled && _oRes.reward_point_use) {
         oOrder.reward_point = _oRes.reward_point_use
@@ -850,7 +850,7 @@ export default {
       return res
     },
     fnPreGroupon (oOrder) {
-      let res = true
+      const res = true
       const _grouponNo = this.grouponNo || ''
       if (_grouponNo) {
         oOrder.groupon_no = _grouponNo
@@ -858,7 +858,7 @@ export default {
       return res
     },
     fnPreInvoice (oOrder) {
-      let res = true
+      const res = true
       const _oInvoice = this.oInvoice
       oOrder.invoice_id = _oInvoice.invoice_id || null
       oOrder.need_invoice = _oInvoice.need_invoice
@@ -978,9 +978,9 @@ export default {
 
       // 积分兑换商品。写这儿?
       if (this.oRouterQuery === 'point') {
-        let _oDiscountSkuMap = this.oDiscountSkuMap
-        let _pointExchange = []
-        for (let item in _oDiscountSkuMap) {
+        const _oDiscountSkuMap = this.oDiscountSkuMap
+        const _pointExchange = []
+        for (const item in _oDiscountSkuMap) {
           _pointExchange.push(_oDiscountSkuMap[item].variant_id)
         }
         _oOrder.point_exchange = _pointExchange

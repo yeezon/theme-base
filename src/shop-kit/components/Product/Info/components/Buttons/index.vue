@@ -155,7 +155,7 @@ export default {
       const nMpID = (this.eventSku || {}).mp_id || null
 
       if (_handle && _discountHandle && nMpID) {
-        let cont = window.prompt('请输入手机号', '')
+        const cont = window.prompt('请输入手机号', '')
 
         if (this.$sdk.util.isMobile(cont)) {
           window.fetch(`/api/v1/marketing/${_discountHandle}/reserves`, {

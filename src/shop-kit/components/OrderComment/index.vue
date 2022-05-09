@@ -90,7 +90,7 @@ export default {
       if (this.isOnly) {
         this.successAll = true
       } else {
-
+        // Code...
       }
     }
   },

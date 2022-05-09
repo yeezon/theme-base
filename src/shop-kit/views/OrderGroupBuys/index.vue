@@ -66,9 +66,10 @@ export default {
         if (res.code === 200) {
           this.oOrders = res.orders
           this.total_page = res.paging.pages
-          this.oOrders.map((item) => {
+
+          for (const item of this.oOrders) {
             item.src = this.$sdk.util.getImageUrl(item.shipments[0].line_items[0].feature_image.image_id, item.shipments[0].line_items[0].feature_image.image_name, '60x60', item.shipments[0].line_items[0].feature_image.image_epoch)
-          })
+          }
         } else {
           alert(res.message || '未知错误')
         }
@@ -90,9 +91,10 @@ export default {
           getOrders(this.listQuery.status, this.page, this.listQuery.size).then(oRes => {
             return oRes.json()
           }).then(res => {
-            res.orders.map((item) => {
+            for (const item of res.orders) {
               item.src = this.$sdk.util.getImageUrl(item.shipments[0].line_items[0].feature_image.image_id, item.shipments[0].line_items[0].feature_image.image_name, '60x60', item.shipments[0].line_items[0].feature_image.image_epoch)
-            })
+            }
+
             this.oOrders = this.oOrders.concat(res.orders)
           })
         }

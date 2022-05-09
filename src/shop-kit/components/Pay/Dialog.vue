@@ -115,7 +115,9 @@ export default {
       if (desc === '美智聚合支付') {
         desc = '在线支付'
       }
-
+      if (desc && desc.indexOf('（') > -1) {
+        desc = desc.slice(0, desc.indexOf('（'))
+      }
       return desc
     },
     goPay (id, bankId, isOnePay) {
@@ -131,6 +133,15 @@ export default {
             if (isWeApp) {
               window.wx && window.wx.miniProgram.navigateTo({
                 url: `/pages/payment/go_pay?order_no=${this.orderNo}&payment_method_id=${id}&sum=${this.sum}`
+              })
+
+              this.isOpen = false
+
+              this.$confirm({
+                title: '支付确认',
+                msg: '是否已支付完成？'
+              }).then(() => {}).catch(() => {}).finally(() => {
+                window.location.reload()
               })
             } else {
               if (this.$env.isMobi || (isOnePay && !(/^\/account\/orders/i.test(this.$route.path)))) {
@@ -153,7 +164,7 @@ export default {
                     if (/^\/account\/orders/i.test(this.$route.path)) {
                       this.$confirm({
                         title: '支付确认',
-                        msg: `是否已支付完成？`
+                        msg: '是否已支付完成？'
                       }).then(() => {}).catch(() => {}).finally(() => {
                         window.location.reload()
                       })

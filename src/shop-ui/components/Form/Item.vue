@@ -111,16 +111,18 @@ export default {
       return ret
     },
     form () {
-      const self = this // ESLint
-      let parent = self.$parent
+      let parent = this.$parent
       let parentName = parent.$options.name
+
       while (parentName !== 'SuForm') {
         if (parentName === 'SuFormItem') {
-          self.isNested = true
+          this.setIsNested(true)
         }
+
         parent = parent.$parent
         parentName = parent.$options.name
       }
+
       return parent
     },
     fieldValue () {
@@ -135,7 +137,7 @@ export default {
       return getPropByPath(model, path, true).v
     },
     isRequired () {
-      let rules = this.getRules()
+      const rules = this.getRules()
       let isRequired = false
 
       if (rules && rules.length) {
@@ -209,14 +211,14 @@ export default {
       this.validateState = ''
       this.validateMessage = ''
 
-      let model = this.form.model
-      let value = this.fieldValue
+      const model = this.form.model
+      const value = this.fieldValue
       let path = this.prop
       if (path.indexOf(':') !== -1) {
         path = path.replace(/:/, '.')
       }
 
-      let prop = getPropByPath(model, path, true)
+      const prop = getPropByPath(model, path, true)
 
       this.validateDisabled = true
       if (Array.isArray(value)) {
@@ -263,6 +265,9 @@ export default {
     setTips (message) {
       this.validateState = 'error'
       this.validateMessage = message || ''
+    },
+    setIsNested (val) {
+      this.isNested = !!val
     }
   },
   mounted () {
@@ -277,7 +282,7 @@ export default {
         value: initialValue
       })
 
-      let rules = this.getRules()
+      const rules = this.getRules()
 
       if (rules.length || this.required !== undefined) {
         this.$on('su.form.blur', this.onFieldBlur)

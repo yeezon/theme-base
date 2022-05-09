@@ -51,13 +51,15 @@ export default {
     return {
       canCancel: false,
       reject: false,
-      refunded: false
+      refunded: false,
+      currentStatus: null
     }
   },
   computed: {
     type () {
       const afterSaleType = this.order.after_sale_type
       let type
+
       switch (afterSaleType) {
         case 0:
           type = '退款'
@@ -77,11 +79,20 @@ export default {
     }
 
   },
+  watch: {
+    order (oVal) {
+      this.currentStatus = oVal.current_status
+    }
+  },
+  created () {
+    this.currentStatus = this.order.current_status
+  },
   methods: {
     status () {
-      const afterSaleStatus = this.order.current_status
+      // const afterSaleStatus = this.order.current_status
       let status
-      switch (afterSaleStatus) {
+
+      switch (this.currentStatus) {
         case 0:
         case 10:
         case 20:
@@ -134,6 +145,7 @@ export default {
           break
         case 99:
           status = '已取消'
+          this.canCancel = false
           break
 
         default:
@@ -149,7 +161,9 @@ export default {
         this.$sdk.service.cancel({ id: id }, ({ res }) => {
           console.log(res)
           if (res.code === 200) {
-            this.order.after_sale_status = res.data.status
+            // this.order.after_sale_status = res.data.status
+            // this.order.current_status = res.data.status
+            this.currentStatus = res.data.status
           }
         })
       }).catch(() => {

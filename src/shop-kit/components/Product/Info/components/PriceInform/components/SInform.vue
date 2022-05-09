@@ -55,8 +55,8 @@ export default {
     }
   },
   data () {
-    var checkPrice = (rule, value, callback) => {
-      let price = Number(Number.parseFloat(100 * value).toPrecision(14))
+    const checkPrice = (rule, value, callback) => {
+      const price = Number(Number.parseFloat(100 * value).toPrecision(14))
       if (value === '') {
         callback(new Error('请输入价格'))
       } else if (price >= this.variantPrice) {
@@ -65,10 +65,10 @@ export default {
         this.fncheckPriceStater(value, callback)
       }
     }
-    var checkMobile = (rule, value, callback) => {
+    const checkMobile = (rule, value, callback) => {
       this.fncheckMobileStater(value, callback)
     }
-    var checkEmail = (rule, value, callback) => {
+    const checkEmail = (rule, value, callback) => {
       this.fncheckEmailStater(value, callback)
     }
     return {
@@ -140,7 +140,7 @@ export default {
         if (valid) {
           console.log('过关')
           window
-            .fetch(`/api/v1/product/subscribe`, {
+            .fetch('/api/v1/product/subscribe', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

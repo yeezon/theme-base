@@ -205,7 +205,7 @@ export default {
         const items = Object.entries(_oIsChoose)
         let nSku = null
         for (const sku in _oSkuMapKeys) {
-          let keys = _oSkuMapKeys[sku]
+          const keys = _oSkuMapKeys[sku]
           let nMark = 0
           for (const item of items) {
             if (keys.includes(item.join('.'))) {

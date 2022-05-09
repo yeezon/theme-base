@@ -40,14 +40,14 @@ export default {
     Treaty
   },
   data () {
-    var checkAccount = (rule, value, callback) => {
+    const checkAccount = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入' + this.registMethods))
       } else {
         this.fnCheckAccountStater(value, callback)
       }
     }
-    var validatePassword = (rule, value, callback) => {
+    const validatePassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else if (value.length < 6) {
@@ -59,7 +59,7 @@ export default {
         callback()
       }
     }
-    var validatePasswordAgain = (rule, value, callback) => {
+    const validatePasswordAgain = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('确认密码不能为空'))
       } else if (value !== this.user.password) {
@@ -68,7 +68,7 @@ export default {
         callback()
       }
     }
-    var checkVerifyCode = (rule, value, callback) => {
+    const checkVerifyCode = (rule, value, callback) => {
       if (!this.isMobileRegister) return callback()
       if (value === '') {
         callback(new Error('手机验证码不能为空'))
@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     registMethods () {
-      let methods = []
+      const methods = []
       if (this.allowMobile) {
         methods.push('手机')
       }
@@ -247,7 +247,7 @@ export default {
       let time = 60
       self.time = time
       self.getCodeLoading = true
-      var interval = setInterval(function () {
+      const interval = setInterval(function () {
         time--
         self.time = time
         if (time <= 0) {

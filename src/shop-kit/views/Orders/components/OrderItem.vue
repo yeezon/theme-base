@@ -64,11 +64,24 @@
           <!-- <a v-if="(oOrder.status === 0 && oOrder.payment_status === 0) || (oOrder.payment_method_type === 1 && oOrder.shipment_status === 0 && oOrder.status === 0)" href="javascript:void(0);" @click="openCancel = true">取消订单</a> -->
           <a v-if="oOrder.status === 0 && ( oOrder.payment_status === 0 || oOrder.shipment_status === 0)" href="javascript:void(0);" @click="openCancel = true">取消订单</a>
           <!-- 申请售后 -->
+          <!-- all_after_sale_flag === false 或者  after_sale_current_status === 99-->
           <!-- <s-apply-sale v-if="(oOrder.status === 0 || oOrder.status === 4 || oOrder.status === 6) && oOrder.payment_status === 2 && (oOrder.payment_method_type !== 1 || oOrder.payment_method_type === 1 && oOrder.status === 4) && !oOrder.all_after_sale_flag && !oOrder.total_point_price" :order="oOrder" :is-virtual="oOrder.is_virtual"></s-apply-sale> -->
-          <s-apply-sale v-if="(oOrder.status === 0 || oOrder.status === 4 || oOrder.status === 6) && oOrder.shipment_status && oOrder.payment_status === 2 && !oOrder.all_after_sale_flag && !oOrder.total_point_price" :order="oOrder"></s-apply-sale>
+          <!-- <s-apply-sale
+            v-if="(oOrder.status === 0 || oOrder.status === 4 || oOrder.status === 6)
+              && oOrder.shipment_status
+              && oOrder.payment_status === 2
+              && !oOrder.all_after_sale_flag
+              && !oOrder.total_point_price" :order="oOrder"></s-apply-sale> -->
+          <s-apply-sale
+            v-if="(oOrder.status === 0 || oOrder.status === 4 || oOrder.status === 6 || oOrder.status === 3)
+              && oOrder.shipment_status
+              && oOrder.payment_status === 2
+              && !oOrder.total_point_price
+              && (showAfterSaleBtn || !oOrder.all_after_sale_flag)"
+              :order="oOrder"></s-apply-sale>
           <!-- <s-apply-sale :order="oOrder"></s-apply-sale> -->
           <!-- 售后进度 -->
-          <a v-if="oOrder.exist_service" href="/account/services/orders">售后进度</a>
+          <a v-if="showServiceInfoBtn" @click='serviceInfoHandle'>售后进度</a>
           <!-- 评价晒单 -->
           <s-order-comment v-if="shop.enable_comment && oOrder.status === 4" :order="oOrder"></s-order-comment>
         </div>
@@ -80,6 +93,13 @@
 
     <!-- 支付订单 -->
     <s-pay :is-pay="isPay" :payment-data="{}" :is-signed="true" :order-no="order.order_no" :pay-methods="oPayOnlineMethods" :sum="order.total_amount" @close="fnPayClose"></s-pay>
+
+    <!-- 售后dialog -->
+    <s-after-sale
+      :order_no="order.order_no"
+      :afterSaleMap="afterSaleMap"
+      :open="openAfterSale"
+      @close="openAfterSale = false"/>
   </div>
 </template>
 
@@ -88,7 +108,7 @@ import sCancelOrder from '../../../components/Order/Cancel'
 import sPay from '../../../components/Pay/Dialog'
 import sOrderComment from '../../../components/OrderComment'
 import sApplySale from '../../../components/ApplySale'
-
+import sAfterSale from '../components/afterSale'
 export default {
   props: {
     order: {
@@ -102,7 +122,8 @@ export default {
     sCancelOrder,
     sPay,
     sOrderComment,
-    sApplySale
+    sApplySale,
+    sAfterSale
   },
   watch: {
     order (val) {
@@ -115,7 +136,9 @@ export default {
       oOrder: this.order || {},
       isPay: false,
       oPaymentMethods: {},
-      openCancel: false
+      openCancel: false,
+      afterSaleMap: {},
+      openAfterSale: false
     }
   },
   computed: {
@@ -145,6 +168,37 @@ export default {
         }
       }
       return res
+    },
+    showAfterSaleBtn () {
+      // after_sale_current_status === 99 (99=>用户主动取消售后)
+      let show = false
+      if (this.order.shipments.length) {
+        // 买家取消的话，还可以申请售后
+        this.order.shipments.forEach(item => {
+          const _item = (item.line_items || []).find(i => i.after_sale_current_status === 99)
+          if (_item) {
+            show = true
+          }
+        })
+      }
+
+      return show
+    },
+
+    showServiceInfoBtn () {
+      if (!this.order.exist_service) return false
+      let show = false
+      // after_sale_current_status 有不等于99就说明有商品在售后 (99=>用户主动取消售后)
+      if (this.order.shipments.length) {
+        // 买家取消的话，还可以申请售后
+        this.order.shipments.forEach(item => {
+          const _item = (item.line_items || []).find(i => i.after_sale_current_status !== 99)
+          if (_item) {
+            show = true
+          }
+        })
+      }
+      return show
     }
   },
   methods: {
@@ -180,6 +234,38 @@ export default {
         }
         cb && cb(err)
       })
+    },
+    serviceInfoHandle () {
+      let _items = []
+      if (this.order.shipments.length) {
+        this.order.shipments.forEach(item => {
+          _items = (item.line_items || []).filter(i => i.after_sale_id)
+          console.log('items => ', _items)
+        })
+      }
+
+      const ordersMap = {}
+      _items.forEach(item => {
+        item.imgUrl = this.getImageUrl(item.feature_image.image_id, item.feature_image.image_name, '60x60', item.feature_image.image_epoch)
+        if (!ordersMap[item.after_sale_id]) {
+          ordersMap[item.after_sale_id] = [item]
+        } else {
+          ordersMap[item.after_sale_id].push(item)
+        }
+      })
+
+      // 只有一个售后申请就直接跳转
+      if (Object.keys(ordersMap).length === 1) {
+        window.location.href = `/account/services/orders/${this.order.order_no}/apply_schedule?sale_id=${_items[0].after_sale_id}`
+        return
+      }
+
+      // 有不只一个售后申请，就分开
+      if (Object.keys(ordersMap).length >= 2) {
+        this.afterSaleMap = ordersMap
+        this.openAfterSale = true
+        console.log('ordersMap =>', ordersMap)
+      }
     },
     payOrder () {
       this.getPayments((err, payType) => {
@@ -226,7 +312,7 @@ export default {
           })
         }
       }
-      let _length = items.length
+      const _length = items.length
       let nErr = 0
       const _fn = (item, index) => {
         this.$sdk.cart.add({

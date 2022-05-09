@@ -244,7 +244,7 @@ export default {
                   this.oInvoiceForm = this.invoice_history[0]
                 } else {
                   // 是虚拟商品，取第一个style为0的invoice_style
-                  for (let item in this.invoice_history) {
+                  for (const item in this.invoice_history) {
                     if (this.invoice_history[item].invoice_style === 0) {
                       this.oInvoiceForm = this.invoice_history[item]
                       break

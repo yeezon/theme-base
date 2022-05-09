@@ -5,9 +5,10 @@
         <swiper-slide
           v-for="(item, index) in images"
           :key="index"
-          :style="{backgroundImage:`url(${item.src}`}"
+          :style="{backgroundImage:`url('${item.src}')`}"
           @click.native="fnLink"
-        ></swiper-slide>
+        >
+        </swiper-slide>
         <div class="swiper-pagination swiper-pagination-gallery" slot="pagination"></div>
         <div class="swiper-button-next swiper-button-white" slot="button-next">
           <svg-icon name="imagesposts-next"></svg-icon>
@@ -21,7 +22,7 @@
           v-for="(item, index) in images"
           :key="index"
           class="slide-thumbs"
-          :style="{backgroundImage:`url(${item.src}`}"
+          :style="{backgroundImage:`url('${item.src}')`}"
         ></swiper-slide>
       </swiper>
     </div>
