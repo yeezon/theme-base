@@ -37,6 +37,8 @@ module.exports = {
     config.output.chunkFilename = '[id]-[chunkhash].raw.js'
   },
 
+  publicPath: 'auto',
+
   chainWebpack: config => {
     // Optimization
     config.optimization.splitChunks(false)
