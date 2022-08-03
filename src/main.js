@@ -24,7 +24,7 @@ import './vendors/jssdk' // 后续优化，避免影响全局
 // Fix Vue CLI BUG
 // Runtime PublicPath
 // eslint-disable-next-line
-// __webpack_public_path__ = (((((window.document.currentScript || {}).src || '').match(/(.+\/)[^/]+\.js/) || [])[1]) || '').replace(/js\/$/, '') || '/'
+__webpack_public_path__ = (((((window.document.currentScript || {}).src || '').match(/(.+\/)[^/]+\.js/) || [])[1]) || '').replace(/js\/$/, '') || '/'
 
 cssVars({
   include: 'style',
